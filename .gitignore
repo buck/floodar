@@ -1,0 +1,19 @@
+# Android Studio configuration.
+*.iml
+.idea/
+
+# Gradle configuration.
+.gradle/
+build/
+
+# User configuration.
+local.properties
+
+# Per-machine Claude Code settings.
+.claude/settings.local.json
+
+# OS configurations.
+.DS_Store
+
+# Android NDK cmake output.
+.cxx/
