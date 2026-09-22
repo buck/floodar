@@ -112,12 +112,51 @@ ground-truth data used to calibrate and validate the WSE rasters above.
 
 ### Subsidence
 Parts of Harris County have literally sunk — several feet in the worst spots
-(Jersey Village, north-central Harris) since the 1970s — due to groundwater
-withdrawal. Implication for floodar: if you use a 2024 DEM with a 2017 Harvey
-WSE, the depth computation will be biased by whatever subsidence occurred in
-between. Not disastrous (typically < 1 ft for the 2017→2024 window), but
-worth noting near the north-central subsidence districts. The Harris–Galveston
-Subsidence District publishes subsidence rate maps.
+(Jersey Village, FM 1960 corridor, north-central Harris) since the 1970s —
+due to groundwater withdrawal. Historically the highest rates were in
+north-central and northwest Harris; after HGSD's Regulatory Areas 1/2/3
+forced conversion to surface water in the 2000s, those rates dropped
+sharply and the active-subsidence hotspot has migrated west/southwest
+(Katy, western Fort Bend, Waller County), where groundwater pumping
+continues.
+
+Implication for floodar: if you use a 2024 DEM with a 2017 Harvey WSE, the
+depth computation is biased by whatever subsidence occurred between those
+dates. In modern north-central Harris this is typically 5–20 cm total over
+that 7-year window (not disastrous, but visible in AR at the sidewalk
+scale). In the active-subsidence west/southwest hotspot it can exceed
+30 cm and is worth explicitly correcting.
+
+**Data sources — north-central Harris and countywide:**
+
+- **HGSD interactive subsidence rate maps** (ArcGIS Online): the most recent
+  is the 2021–2025 InSAR+GPS-combined rate map. Contour lines in cm/yr; the
+  underlying feature service is queryable via the ArcGIS REST API, so you
+  can pull polygons/rasters programmatically.
+  - Landing: <https://hgsubsidence.org/science-research/district-research/monitoring-the-land-surface-from-space/>
+  - Map: <https://hgsd.maps.arcgis.com/apps/mapviewer/index.html?webmap=c1d181be5e8446fca29885fb439defd4>
+- **HGSD historical InSAR (1992–2023)** — multi-temporal InSAR processed in
+  partnership with SMU. Covers the whole 30-year record; useful if you want
+  cumulative subsidence at a point (e.g., for a "how much has this house
+  dropped since Harvey" overlay).
+- **HGSD PAM (Port-A-Measure) borehole extensometers** — ~30 stations across
+  the district including several in north-central Harris (Addicks, Lake
+  Houston, East End). Provides point-source ground-truth for the InSAR
+  rasters. Annual reports at <https://hgsubsidence.org/science-research/>.
+- **USGS Houston-Galveston Subsidence Studies** — publishes periodic fact
+  sheets and data releases with rate maps. Search USGS ScienceBase for
+  "Houston-Galveston subsidence."
+- **Wang et al. (University of Houston GPS lab)** — publishes GNSS-based
+  vertical velocity time series for stations across the region; some of the
+  earliest peer-reviewed cm/yr rate maps specifically for north-central
+  Harris are from this group.
+
+For app use: pull the current HGSD rate raster (or query the ArcGIS
+FeatureServer at a point) → integrate rate × Δt between DEM epoch and
+event epoch → apply as a small vertical correction before the flood-plane
+render. Constant-rate approximation is fine; the actual rate has changed
+year-to-year but the residual error is tiny compared to the datum
+conversion.
 
 ### COG (Cloud-Optimized GeoTIFF)
 A GeoTIFF laid out so an HTTP client can `Range:`-request just the tile
@@ -197,8 +236,10 @@ Gotcha checklist:
 - [ ] Units: NAVD88 products come in feet OR metres depending on publisher.
       Check the metadata.
 - [ ] Datum: never assume; always convert NAVD88 → WGS84 ellipsoidal.
-- [ ] Subsidence: for 2017 Harvey WSE + 2024 DEM, subtract a small correction
-      in north-central Harris if you want < 0.5 ft accuracy.
+- [ ] Subsidence: for 2017 Harvey WSE + 2024 DEM, apply an HGSD-rate-map
+      correction (5–20 cm in north-central Harris, 20–30+ cm in the western
+      hotspot) if you want < 0.5 ft accuracy. See Concepts §Subsidence for
+      HGSD/USGS/UH-GPS data sources.
 - [ ] Extent: WSE rasters have holes / nodata outside the flood. Handle
       "point not in flood" cleanly rather than reading garbage.
 
@@ -214,6 +255,9 @@ Gotcha checklist:
 - <https://msc.fema.gov/nfhl> — FEMA NFHL floodplain layer
 - <https://emergency.copernicus.eu/mapping/list-of-components/EMSR229> — Copernicus Harvey activation
 - <https://geoidobs.ngs.noaa.gov/GEOID18/> — NOAA NGS GEOID18 (for datum conversion)
-- <https://hgsubsidence.org/> — Harris–Galveston Subsidence District
+- <https://hgsubsidence.org/> — Harris–Galveston Subsidence District (landing)
+- <https://hgsubsidence.org/science-research/district-research/monitoring-the-land-surface-from-space/> — HGSD InSAR land-surface monitoring program
+- <https://hgsd.maps.arcgis.com/apps/mapviewer/index.html?webmap=c1d181be5e8446fca29885fb439defd4> — HGSD 2021–2025 subsidence-rate map (ArcGIS; FeatureServer queryable via REST)
+- <https://hgsubsidence.org/science-research/> — HGSD annual reports and PAM extensometer data
 
 [floodar-mem]: ../../.claude/projects/-home-buck/memory/project_floodar.md
