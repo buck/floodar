@@ -218,6 +218,7 @@ public class GeospatialActivity extends AppCompatActivity
   private int groundProbeFrame;
   private long lastFloodHudMillis;
   private static final float ASSUMED_PHONE_HEIGHT_M = 1.4f;
+  private Earth.EarthState lastEarthErrorState;
 
   // ARCore session recording/playback (camera + sensors as MP4, replayable through the app).
   private File currentRecording;
@@ -768,7 +769,11 @@ public class GeospatialActivity extends AppCompatActivity
         message = getResources().getString(R.string.status_pretracking);
         break;
       case EARTH_STATE_ERROR:
-        message = getResources().getString(R.string.status_earth_state_error);
+        message =
+            getResources().getString(R.string.status_earth_state_error)
+                + "\n("
+                + lastEarthErrorState
+                + ")";
         break;
       case LOCALIZING:
         message = getResources().getString(R.string.status_localize_hint);
@@ -1147,7 +1152,12 @@ public class GeospatialActivity extends AppCompatActivity
 
   /** Change behavior depending on the current {@link State} of the application. */
   private void updateGeospatialState(Earth earth) {
-    if (earth.getEarthState() != Earth.EarthState.ENABLED) {
+    Earth.EarthState earthState = earth.getEarthState();
+    if (earthState != Earth.EarthState.ENABLED) {
+      if (state != State.EARTH_STATE_ERROR || earthState != lastEarthErrorState) {
+        Log.e(TAG, "Earth state error: " + earthState);
+        lastEarthErrorState = earthState;
+      }
       state = State.EARTH_STATE_ERROR;
       return;
     }
