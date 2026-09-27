@@ -63,9 +63,9 @@ precisely because thousands of Houstonians saw exactly this in their own homes i
   neighborhood flood at human scale, without trying to read a flood map.
 
 **A note of care.** floodar recreates real floods. Some viewers lived through them, lost homes,
-or, like the Braesheather family in section 2.3, left Houston afterward. The app should say
-so on first launch, and presenters should expect that for some people this is a memory, not
-a simulation.
+or, like the Braesheather family in section 2.3, left Houston afterward. The app says so on
+first launch ("These floods were real"), and presenters should expect that for some people
+this is a memory, not a simulation.
 
 **Why the app can't fake the GPS location instead:** ARCore's Geospatial API finds the phone's
 position mostly by matching the camera image against Google Street View imagery (Google calls

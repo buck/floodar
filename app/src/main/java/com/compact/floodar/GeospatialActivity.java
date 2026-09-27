@@ -130,6 +130,7 @@ public class GeospatialActivity extends AppCompatActivity
   private static final String ALLOW_GEOSPATIAL_ACCESS_KEY = "ALLOW_GEOSPATIAL_ACCESS";
   private static final String ANCHOR_MODE = "ANCHOR_MODE";
   private static final String FLOOD_SITE_ID = "FLOOD_SITE_ID";
+  private static final String CARE_NOTICE_SHOWN = "CARE_NOTICE_SHOWN";
   private static final String FLOOD_SCENARIO_ID = "FLOOD_SCENARIO_ID";
 
   private static final float Z_NEAR = 0.1f;
@@ -300,6 +301,7 @@ public class GeospatialActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     sharedPreferences = getPreferences(Context.MODE_PRIVATE);
     loadFloodSites();
+    showCareNoticeOnce();
 
     setContentView(R.layout.activity_main);
     surfaceView = findViewById(R.id.surfaceview);
@@ -1448,6 +1450,27 @@ public class GeospatialActivity extends AppCompatActivity
       return;
     }
     surfaceView.onResume();
+  }
+
+  /** One-time notice: the floods shown are real, and some users lived through them. */
+  private void showCareNoticeOnce() {
+    if (sharedPreferences.getBoolean(CARE_NOTICE_SHOWN, false)) {
+      return;
+    }
+    new AlertDialog.Builder(this)
+        .setTitle("These floods were real")
+        .setMessage(
+            "floodar recreates real Houston floods at full scale: the Memorial Day and"
+                + " Tax Day floods, Harvey, and Imelda.\n\n"
+                + "Thousands of Houstonians saw this water in their own streets and homes."
+                + " Some lost everything; some left Houston for good. If you lived through"
+                + " one of these floods, seeing it again can be hard. It's fine to stop at any"
+                + " time.")
+        .setCancelable(false)
+        .setPositiveButton(
+            "I understand",
+            (dialog, which) -> sharedPreferences.edit().putBoolean(CARE_NOTICE_SHOWN, true).apply())
+        .show();
   }
 
   /** Loads flood sites and restores the last selection. */
