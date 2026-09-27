@@ -24,7 +24,7 @@
   <string translatable="false" name="status_pretracking">Localizing your device to set anchor.</string>
   <string translatable="false" name="status_earth_state_error">There was an error state error, check that you have a valid authentication for the ARCore API.</string>
   <string translatable="false" name="status_localize_hint">Point your camera at buildings, stores, and signs near you.</string>
-  <string translatable="false" name="status_localize_timeout">Localization not possible.\nClose and open the app to restart session.</string>
+  <string translatable="false" name="status_localize_timeout">Still localizing. Point the camera at buildings and the skyline; it keeps trying.</string>
   <string translatable="false" name="status_localize_complete">Localization complete.</string>
   <string translatable="false" name="status_terrain_anchor">Terrain anchor state: %1$s</string>
   <string translatable="false" name="status_rooftop_anchor">Rooftop anchor state: %1$s</string>

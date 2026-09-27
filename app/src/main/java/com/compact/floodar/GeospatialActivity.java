@@ -782,7 +782,8 @@ public class GeospatialActivity extends AppCompatActivity
         message = getResources().getString(R.string.status_localize_timeout);
         break;
       case LOCALIZED:
-        if (lastStatusText.equals(getResources().getString(R.string.status_localize_hint))) {
+        if (lastStatusText.equals(getResources().getString(R.string.status_localize_hint))
+            || lastStatusText.equals(getResources().getString(R.string.status_localize_timeout))) {
           message = getResources().getString(R.string.status_localize_complete);
         }
         break;
@@ -1167,7 +1168,9 @@ public class GeospatialActivity extends AppCompatActivity
     }
     if (state == State.PRETRACKING) {
       updatePretrackingState(earth);
-    } else if (state == State.LOCALIZING) {
+    } else if (state == State.LOCALIZING || state == State.LOCALIZING_FAILED) {
+      // Keep trying after the timeout: outdoors, VPS often succeeds once the camera finally
+      // sees buildings. The timeout only changes the hint shown to the user.
       updateLocalizingState(earth);
     } else if (state == State.LOCALIZED) {
       updateLocalizedState(earth);
@@ -1220,8 +1223,9 @@ public class GeospatialActivity extends AppCompatActivity
       return;
     }
 
-    if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - localizingStartTimestamp)
-        > LOCALIZING_TIMEOUT_SECONDS) {
+    if (state == State.LOCALIZING
+        && TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - localizingStartTimestamp)
+            > LOCALIZING_TIMEOUT_SECONDS) {
       state = State.LOCALIZING_FAILED;
       return;
     }
