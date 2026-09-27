@@ -23,12 +23,49 @@ What you see depends on two numbers:
    ```
 
 Number 2 is computed ahead of time from public data, so the app doesn't need GPS to render a
-flood. This enables two ways to use it:
+flood. This enables three ways to use it:
 
 - **On site:** stand at the location and you see its actual flood depth, on its actual houses.
 - **Teleport:** stand anywhere, such as your own street. You see the depth from a chosen
   Houston site at your own curb, against your own neighbors' houses. The display says clearly
   which site the depth comes from.
+- **In your home:** stand in a living room, tap the floor, and the water rises to the chosen
+  depth indoors (section 1.1).
+
+### 1.1 In your home
+
+Outdoors, flood depth is a number on a gauge. Indoors it's the couch, the bookshelf and the
+kitchen cabinets. Tap the floor of any room and floodar fills it with muddy water at a real
+Houston depth. The water reflects the room's own walls and furniture, ripples, and stands at a
+height someone actually lived through:
+
+- **2 ft:** a resident's street in Harvey, just above the knees (the "1:41 pm" scenario). The
+  same water was inches from their slab and about 2 ft deep inside houses two blocks east.
+- **About 7 ft:** a Braesheather Dr home in Meyerland in Harvey, over the door handles and
+  most of the way to the ceiling.
+
+Testing indoors on the first day, the effect was stronger than expected. It was unsettling
+precisely because thousands of Houstonians saw exactly this in their own homes in 2001, 2015,
+2016, 2017 and 2019.
+
+**Why it matters for decisions people actually make:**
+
+- **Flood insurance.** Many homes that flood are outside the 100-year floodplain, and many
+  owners inside it skip coverage. Seeing 2 ft of water in your own living room reframes
+  "is flood insurance worth $X a year?"
+- **Rebuilding and elevation.** After a flood, owners choose between repairing in place,
+  elevating, or leaving. Seeing the previous flood, and the 500-year level, at full scale in
+  the room makes that choice concrete.
+- **Preparedness.** What's on the floor or in the lower cabinets? What can't be replaced?
+  Where would you go? A few minutes of standing "in" the water answers those questions better
+  than a map.
+- **Public education.** Classrooms, libraries and community meetings can show a real
+  neighborhood flood at human scale, without trying to read a flood map.
+
+**A note of care.** floodar recreates real floods. Some viewers lived through them, lost homes,
+or, like the Braesheather family in section 2.3, left Houston afterward. The app should say
+so on first launch, and presenters should expect that for some people this is a memory, not
+a simulation.
 
 **Why the app can't fake the GPS location instead:** ARCore's Geospatial API finds the phone's
 position mostly by matching the camera image against Google Street View imagery (Google calls
