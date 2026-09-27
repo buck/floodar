@@ -278,8 +278,10 @@ With a site and scenario selected:
   so houses correctly block the water beyond them. The line's width grows with distance so it
   stays a few pixels thick far away. Because this uses Google's 3D city model, it works on
   buildings at any distance, well beyond where the phone can detect planes.
-- **Depth gauge.** Where you tap the ground, a pole with alternating red and white **1-foot
-  stripes** rises to 1 ft above the water level.
+- **Depth gauge.** Where you tap the reference surface, a pole with alternating red and white
+  **1-foot stripes** rises at least 6 ft (about a person's height) and at least 2 ft above the
+  water. **"1 ft", "2 ft"… labels** sit just under each divider. They always face the camera
+  and are drawn over the water, so they stay readable from above and through the mud.
 - **Marker reconstruction** (Clear Lake sites only). At the tapped point, a 25 ft
   blue/green/grey pole next to the gauge.
 

@@ -187,7 +187,8 @@ final class FloodRenderer {
   }
 
   /**
-   * Depth gauge at a ground point: alternating 1-ft stripes up to (and 1 ft past) the water.
+   * Depth gauge at a ground point: alternating 1-ft stripes, at least 6 ft tall and 2 ft past
+   * the water.
    * Labels are drawn separately by {@link #drawGaugeLabels}, after the water.
    */
   void drawGauge(
@@ -200,9 +201,11 @@ final class FloodRenderer {
     }
   }
 
+  /** At least person height (6 ft) and at least 2 ft above the water, for scale. */
   private static int gaugeFeet(float depthMeters) {
     // Round before ceil so 2.0 ft doesn't become 3 through float error.
-    return Math.max(1, (int) Math.ceil(Math.round(depthMeters / FOOT * 100f) / 100f) + 1);
+    int waterFeet = (int) Math.ceil(Math.round(depthMeters / FOOT * 100f) / 100f);
+    return Math.max(6, waterFeet + 2);
   }
 
   /**
