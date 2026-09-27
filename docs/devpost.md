@@ -53,6 +53,8 @@ wherever you point your phone**:
 - **In your own street:** "teleport" any documented depth to where you are. In testing, a
   resident's street filled with muddy water at knee height, matching their own video from
   Aug 27, 2017.
+- **Any depth, anywhere:** "Custom depth" takes a number like "8 inches", the water a friend's
+  house took, and shows it in the room.
 - **In your home:** tap the living-room floor and the room fills with water that reflects the
   furniture and walls. It was unsettling in testing, because thousands of Houstonians saw exactly
   this.

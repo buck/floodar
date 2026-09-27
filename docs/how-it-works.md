@@ -303,6 +303,10 @@ grouped by area. Then choose a scenario; each one shows its depth and the surfac
 from ("7 ft 10 in above ground", "4 in above porch"), or "dry". The toast tells you which
 surface to tap. The choice is saved and restored the next time the app starts.
 
+**MENU → Custom depth…** takes any depth in feet and inches (for example "0 ft 8 in" for a
+friend's house that took 8 in of water). The water stands that high above whatever floor or
+ground you tap. The value is remembered between launches.
+
 Scenario kinds: **observed** (a high-water mark or a resident's observation), **modeled**
 (HCFCD 100/500-year levels), and **interpretation** (the 2010 marker's "25 ft" read as an
 elevation).
