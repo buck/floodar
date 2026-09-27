@@ -1,0 +1,1326 @@
+{
+    "sites": [
+        {
+            "id": "meyerland-braesheather",
+            "lat": 29.67764,
+            "lon": -95.46445,
+            "area": "Meyerland",
+            "name": "Braesheather Dr at Millbury Dr",
+            "note": "Deepest Harvey street flooding found in Meyerland (street-point analysis, 10 m DEM).",
+            "marker": null,
+            "scenarios": [
+                {
+                    "id": "harvey_2017",
+                    "kind": "observed",
+                    "label": "Hurricane Harvey (Aug 2017)",
+                    "marks": [
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 54.10,
+                            "distance_m": 330
+                        },
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 53.69,
+                            "distance_m": 702
+                        },
+                        {
+                            "road": null,
+                            "hwm_id": "D-0069",
+                            "elev_ft": 53.00,
+                            "distance_m": 1028
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 53.05,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 54.87,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 53.57,
+                            "distance_m": 1527
+                        },
+                        {
+                            "road": "S. POST OAK",
+                            "hwm_id": "D-0064",
+                            "elev_ft": 54.24,
+                            "distance_m": 1895
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 50.71,
+                            "distance_m": 2005
+                        },
+                        {
+                            "road": null,
+                            "hwm_id": "D-0070",
+                            "elev_ft": 54.39,
+                            "distance_m": 2429
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 7.8,
+                    "wse_ft_navd88": 53.9
+                },
+                {
+                    "id": "memorial_day_2015",
+                    "kind": "observed",
+                    "label": "Memorial Day flood (May 2015)",
+                    "marks": [
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 52.90,
+                            "distance_m": 330
+                        },
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 51.40,
+                            "distance_m": 702
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 51.60,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 53.60,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 51.70,
+                            "distance_m": 1527
+                        },
+                        {
+                            "road": "S. POST OAK",
+                            "hwm_id": "D-0064",
+                            "elev_ft": 51.90,
+                            "distance_m": 1895
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 49.10,
+                            "distance_m": 2005
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 6.4,
+                    "wse_ft_navd88": 52.5
+                },
+                {
+                    "id": "tax_day_2016",
+                    "kind": "observed",
+                    "label": "Tax Day flood (Apr 2016)",
+                    "marks": [
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 51.70,
+                            "distance_m": 330
+                        },
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 49.60,
+                            "distance_m": 702
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 52.80,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 50.70,
+                            "distance_m": 1527
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 47.70,
+                            "distance_m": 2005
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 5.2,
+                    "wse_ft_navd88": 51.3
+                },
+                {
+                    "id": "imelda_2019",
+                    "kind": "observed",
+                    "label": "Tropical Storm Imelda (Sep 2019)",
+                    "marks": [
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 48.50,
+                            "distance_m": 330
+                        },
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 47.56,
+                            "distance_m": 702
+                        },
+                        {
+                            "road": null,
+                            "hwm_id": "D-0069",
+                            "elev_ft": 45.86,
+                            "distance_m": 1028
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 44.73,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 48.19,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 46.95,
+                            "distance_m": 1525
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 45.17,
+                            "distance_m": 2005
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 1.8,
+                    "wse_ft_navd88": 47.9
+                },
+                {
+                    "id": "hcfcd_100yr",
+                    "kind": "modeled",
+                    "label": "100-year flood (1% annual chance)",
+                    "marks": [
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 54.30,
+                            "distance_m": 330
+                        },
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 53.60,
+                            "distance_m": 702
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 49.80,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 55.50,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 50.70,
+                            "distance_m": 1527
+                        },
+                        {
+                            "road": "S. POST OAK",
+                            "hwm_id": "D-0064",
+                            "elev_ft": 51.20,
+                            "distance_m": 1895
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 51.30,
+                            "distance_m": 2005
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 7.7,
+                    "wse_ft_navd88": 53.8
+                },
+                {
+                    "id": "hcfcd_500yr",
+                    "kind": "modeled",
+                    "label": "500-year flood (0.2% annual chance)",
+                    "marks": [
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 55.70,
+                            "distance_m": 330
+                        },
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 55.00,
+                            "distance_m": 702
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 51.70,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 56.80,
+                            "distance_m": 1153
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 52.90,
+                            "distance_m": 1527
+                        },
+                        {
+                            "road": "S. POST OAK",
+                            "hwm_id": "D-0064",
+                            "elev_ft": 53.60,
+                            "distance_m": 1895
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 52.60,
+                            "distance_m": 2005
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 9.2,
+                    "wse_ft_navd88": 55.2
+                }
+            ],
+            "ground_ft_navd88": 46.1
+        },
+        {
+            "id": "meyerland-braeswood",
+            "lat": 29.67938,
+            "lon": -95.45898,
+            "area": "Meyerland",
+            "name": "S Braeswood Blvd near Rice Blvd bridge",
+            "note": "Major street along Brays Bayou; easier parking than the residential sites.",
+            "marker": null,
+            "scenarios": [
+                {
+                    "id": "harvey_2017",
+                    "kind": "observed",
+                    "label": "Hurricane Harvey (Aug 2017)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 53.69,
+                            "distance_m": 228
+                        },
+                        {
+                            "road": null,
+                            "hwm_id": "D-0069",
+                            "elev_ft": 53.00,
+                            "distance_m": 465
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 54.10,
+                            "distance_m": 836
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 53.05,
+                            "distance_m": 857
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 50.71,
+                            "distance_m": 1461
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 53.57,
+                            "distance_m": 1670
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 54.87,
+                            "distance_m": 1695
+                        },
+                        {
+                            "road": "S. POST OAK",
+                            "hwm_id": "D-0064",
+                            "elev_ft": 54.24,
+                            "distance_m": 2144
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 49.71,
+                            "distance_m": 2222
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 7.6,
+                    "wse_ft_navd88": 53.5
+                },
+                {
+                    "id": "memorial_day_2015",
+                    "kind": "observed",
+                    "label": "Memorial Day flood (May 2015)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 51.40,
+                            "distance_m": 228
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 52.90,
+                            "distance_m": 836
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 51.60,
+                            "distance_m": 857
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 49.10,
+                            "distance_m": 1461
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 51.70,
+                            "distance_m": 1670
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 53.60,
+                            "distance_m": 1695
+                        },
+                        {
+                            "road": "S. POST OAK",
+                            "hwm_id": "D-0064",
+                            "elev_ft": 51.90,
+                            "distance_m": 2144
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 48.30,
+                            "distance_m": 2222
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 5.5,
+                    "wse_ft_navd88": 51.5
+                },
+                {
+                    "id": "tax_day_2016",
+                    "kind": "observed",
+                    "label": "Tax Day flood (Apr 2016)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 49.60,
+                            "distance_m": 228
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 51.70,
+                            "distance_m": 836
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 47.70,
+                            "distance_m": 1461
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 50.70,
+                            "distance_m": 1670
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 52.80,
+                            "distance_m": 1695
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 47.10,
+                            "distance_m": 2222
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 3.8,
+                    "wse_ft_navd88": 49.7
+                },
+                {
+                    "id": "imelda_2019",
+                    "kind": "observed",
+                    "label": "Tropical Storm Imelda (Sep 2019)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 47.56,
+                            "distance_m": 228
+                        },
+                        {
+                            "road": null,
+                            "hwm_id": "D-0069",
+                            "elev_ft": 45.86,
+                            "distance_m": 465
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 48.50,
+                            "distance_m": 836
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 44.73,
+                            "distance_m": 857
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 45.17,
+                            "distance_m": 1461
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 46.95,
+                            "distance_m": 1658
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 48.19,
+                            "distance_m": 1695
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 44.70,
+                            "distance_m": 2222
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 1.2,
+                    "wse_ft_navd88": 47.1
+                },
+                {
+                    "id": "hcfcd_100yr",
+                    "kind": "modeled",
+                    "label": "100-year flood (1% annual chance)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 53.60,
+                            "distance_m": 228
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 54.30,
+                            "distance_m": 836
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 49.80,
+                            "distance_m": 857
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 51.30,
+                            "distance_m": 1461
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 50.70,
+                            "distance_m": 1670
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 55.50,
+                            "distance_m": 1695
+                        },
+                        {
+                            "road": "S. POST OAK",
+                            "hwm_id": "D-0064",
+                            "elev_ft": 51.20,
+                            "distance_m": 2144
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 49.60,
+                            "distance_m": 2222
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 7.3,
+                    "wse_ft_navd88": 53.3
+                },
+                {
+                    "id": "hcfcd_500yr",
+                    "kind": "modeled",
+                    "label": "500-year flood (0.2% annual chance)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 55.00,
+                            "distance_m": 228
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 55.70,
+                            "distance_m": 836
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 51.70,
+                            "distance_m": 857
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 52.60,
+                            "distance_m": 1461
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 52.90,
+                            "distance_m": 1670
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 56.80,
+                            "distance_m": 1695
+                        },
+                        {
+                            "road": "S. POST OAK",
+                            "hwm_id": "D-0064",
+                            "elev_ft": 53.60,
+                            "distance_m": 2144
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 51.80,
+                            "distance_m": 2222
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 8.8,
+                    "wse_ft_navd88": 54.8
+                }
+            ],
+            "ground_ft_navd88": 46.0
+        },
+        {
+            "id": "meyerland-meyerwood",
+            "lat": 29.68100,
+            "lon": -95.45195,
+            "area": "Meyerland",
+            "name": "Meyerwood Dr at Cliffwood Dr",
+            "note": "North of Brays Bayou near I-610.",
+            "marker": null,
+            "scenarios": [
+                {
+                    "id": "harvey_2017",
+                    "kind": "observed",
+                    "label": "Hurricane Harvey (Aug 2017)",
+                    "marks": [
+                        {
+                            "road": null,
+                            "hwm_id": "D-0069",
+                            "elev_ft": 53.00,
+                            "distance_m": 242
+                        },
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 53.69,
+                            "distance_m": 648
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 50.71,
+                            "distance_m": 856
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 53.05,
+                            "distance_m": 883
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 54.10,
+                            "distance_m": 1534
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 49.71,
+                            "distance_m": 1578
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 53.57,
+                            "distance_m": 2013
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 54.87,
+                            "distance_m": 2394
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 7.0,
+                    "wse_ft_navd88": 52.9
+                },
+                {
+                    "id": "memorial_day_2015",
+                    "kind": "observed",
+                    "label": "Memorial Day flood (May 2015)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 51.40,
+                            "distance_m": 648
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 49.10,
+                            "distance_m": 856
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 51.60,
+                            "distance_m": 883
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 52.90,
+                            "distance_m": 1534
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 48.30,
+                            "distance_m": 1578
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 51.70,
+                            "distance_m": 2013
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 53.60,
+                            "distance_m": 2394
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 5.0,
+                    "wse_ft_navd88": 50.9
+                },
+                {
+                    "id": "tax_day_2016",
+                    "kind": "observed",
+                    "label": "Tax Day flood (Apr 2016)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 49.60,
+                            "distance_m": 648
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 47.70,
+                            "distance_m": 856
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 51.70,
+                            "distance_m": 1534
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 47.10,
+                            "distance_m": 1578
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 50.70,
+                            "distance_m": 2013
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 52.80,
+                            "distance_m": 2394
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 3.3,
+                    "wse_ft_navd88": 49.2
+                },
+                {
+                    "id": "imelda_2019",
+                    "kind": "observed",
+                    "label": "Tropical Storm Imelda (Sep 2019)",
+                    "marks": [
+                        {
+                            "road": null,
+                            "hwm_id": "D-0069",
+                            "elev_ft": 45.86,
+                            "distance_m": 242
+                        },
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 47.56,
+                            "distance_m": 648
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 45.17,
+                            "distance_m": 856
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 44.73,
+                            "distance_m": 883
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 48.50,
+                            "distance_m": 1534
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 44.70,
+                            "distance_m": 1578
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 46.95,
+                            "distance_m": 1993
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 48.19,
+                            "distance_m": 2394
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 0.1,
+                    "wse_ft_navd88": 46.0
+                },
+                {
+                    "id": "hcfcd_100yr",
+                    "kind": "modeled",
+                    "label": "100-year flood (1% annual chance)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 53.60,
+                            "distance_m": 648
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 51.30,
+                            "distance_m": 856
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 49.80,
+                            "distance_m": 883
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 54.30,
+                            "distance_m": 1534
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 49.60,
+                            "distance_m": 1578
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 50.70,
+                            "distance_m": 2013
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 55.50,
+                            "distance_m": 2394
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 6.2,
+                    "wse_ft_navd88": 52.1
+                },
+                {
+                    "id": "hcfcd_500yr",
+                    "kind": "modeled",
+                    "label": "500-year flood (0.2% annual chance)",
+                    "marks": [
+                        {
+                            "road": "SOUTH POST OAK",
+                            "hwm_id": "D-0026",
+                            "elev_ft": 55.00,
+                            "distance_m": 648
+                        },
+                        {
+                            "road": "SPRR",
+                            "hwm_id": "D-0024",
+                            "elev_ft": 52.60,
+                            "distance_m": 856
+                        },
+                        {
+                            "road": "WEST BELLFORT",
+                            "hwm_id": "D-0065",
+                            "elev_ft": 51.70,
+                            "distance_m": 883
+                        },
+                        {
+                            "road": "RICE BLVD",
+                            "hwm_id": "D-0027",
+                            "elev_ft": 55.70,
+                            "distance_m": 1534
+                        },
+                        {
+                            "road": "STELLA LINK",
+                            "hwm_id": "D-0023",
+                            "elev_ft": 51.80,
+                            "distance_m": 1578
+                        },
+                        {
+                            "road": "D112 @ WILLOWBEND",
+                            "hwm_id": "D-0025",
+                            "elev_ft": 52.90,
+                            "distance_m": 2013
+                        },
+                        {
+                            "road": "CHIMNEY ROCK",
+                            "hwm_id": "D-0028",
+                            "elev_ft": 56.80,
+                            "distance_m": 2394
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Brays Bayou watershed",
+                    "depth_ft": 7.7,
+                    "wse_ft_navd88": 53.6
+                }
+            ],
+            "ground_ft_navd88": 45.9
+        },
+        {
+            "id": "clearlake-bayarea-clhs",
+            "lat": 29.5821,
+            "lon": -95.1056,
+            "area": "Clear Lake",
+            "name": "Bay Area Blvd near Clear Lake High School",
+            "note": "Approximate site of a 2010 FEMA/Texas Category 4/5 surge marker, removed Jan 2011. Coordinate is the school reference point, not the surveyed footing.",
+            "marker": {
+                "kind": "clear_lake_surge_marker_2010",
+                "bands": [
+                    {
+                        "color": "#2f5fd0",
+                        "label": "CATEGORY 4"
+                    },
+                    {
+                        "color": "#2e8b57",
+                        "label": "CATEGORY 5"
+                    }
+                ],
+                "band_note": "Band order and colors from the Blackburn photo (Baker Institute 2023, Fig. 3); band heights unknown.",
+                "height_ft": 25,
+                "height_note": "Provisional; later reporting describes ~25-ft-tall signs, no drawing recovered."
+            },
+            "scenarios": [
+                {
+                    "id": "harvey_2017",
+                    "kind": "observed",
+                    "label": "Hurricane Harvey (Aug 2017)",
+                    "marks": [
+                        {
+                            "road": "B104 @ BAY AREA BLVD",
+                            "hwm_id": "B-0006",
+                            "elev_ft": 15.74,
+                            "distance_m": 248
+                        },
+                        {
+                            "road": "UNIVERSITY",
+                            "hwm_id": "B-0024",
+                            "elev_ft": 14.87,
+                            "distance_m": 481
+                        },
+                        {
+                            "road": "ELDORADO",
+                            "hwm_id": "B-0019",
+                            "elev_ft": 17.52,
+                            "distance_m": 1274
+                        },
+                        {
+                            "road": "MIDDLEBROOK",
+                            "hwm_id": "B-0021",
+                            "elev_ft": 14.00,
+                            "distance_m": 1294
+                        },
+                        {
+                            "road": "BAY AREA BLVD",
+                            "hwm_id": "B-0003",
+                            "elev_ft": 9.01,
+                            "distance_m": 2141
+                        },
+                        {
+                            "road": "PINELOCH",
+                            "hwm_id": "B-0022",
+                            "elev_ft": 19.28,
+                            "distance_m": 2450
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Armand Bayou watershed",
+                    "depth_ft": -7.8,
+                    "wse_ft_navd88": 15.5
+                },
+                {
+                    "id": "hcfcd_100yr",
+                    "kind": "modeled",
+                    "label": "100-year flood (1% annual chance)",
+                    "marks": [
+                        {
+                            "road": "B104 @ BAY AREA BLVD",
+                            "hwm_id": "B-0006",
+                            "elev_ft": 14.00,
+                            "distance_m": 248
+                        },
+                        {
+                            "road": "UNIVERSITY",
+                            "hwm_id": "B-0024",
+                            "elev_ft": 13.40,
+                            "distance_m": 481
+                        },
+                        {
+                            "road": "ELDORADO",
+                            "hwm_id": "B-0019",
+                            "elev_ft": 16.70,
+                            "distance_m": 1274
+                        },
+                        {
+                            "road": "MIDDLEBROOK",
+                            "hwm_id": "B-0021",
+                            "elev_ft": 12.10,
+                            "distance_m": 1294
+                        },
+                        {
+                            "road": "BAY AREA BLVD",
+                            "hwm_id": "B-0003",
+                            "elev_ft": 11.50,
+                            "distance_m": 2141
+                        },
+                        {
+                            "road": "PINELOCH",
+                            "hwm_id": "B-0022",
+                            "elev_ft": 18.60,
+                            "distance_m": 2450
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Armand Bayou watershed",
+                    "depth_ft": -9.4,
+                    "wse_ft_navd88": 13.9
+                },
+                {
+                    "id": "hcfcd_500yr",
+                    "kind": "modeled",
+                    "label": "500-year flood (0.2% annual chance)",
+                    "marks": [
+                        {
+                            "road": "B104 @ BAY AREA BLVD",
+                            "hwm_id": "B-0006",
+                            "elev_ft": 15.70,
+                            "distance_m": 248
+                        },
+                        {
+                            "road": "UNIVERSITY",
+                            "hwm_id": "B-0024",
+                            "elev_ft": 14.80,
+                            "distance_m": 481
+                        },
+                        {
+                            "road": "ELDORADO",
+                            "hwm_id": "B-0019",
+                            "elev_ft": 18.50,
+                            "distance_m": 1274
+                        },
+                        {
+                            "road": "MIDDLEBROOK",
+                            "hwm_id": "B-0021",
+                            "elev_ft": 13.40,
+                            "distance_m": 1294
+                        },
+                        {
+                            "road": "BAY AREA BLVD",
+                            "hwm_id": "B-0003",
+                            "elev_ft": 15.00,
+                            "distance_m": 2141
+                        },
+                        {
+                            "road": "PINELOCH",
+                            "hwm_id": "B-0022",
+                            "elev_ft": 20.40,
+                            "distance_m": 2450
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Armand Bayou watershed",
+                    "depth_ft": -7.7,
+                    "wse_ft_navd88": 15.6
+                },
+                {
+                    "id": "marker_25ft_as_elevation",
+                    "kind": "interpretation",
+                    "label": "2010 marker's \"25-ft surge\", read as 25 ft NAVD88",
+                    "source": "Bay Area Citizen, 2011-02-01; datum never documented",
+                    "depth_ft": 1.7,
+                    "wse_ft_navd88": 25.0
+                }
+            ],
+            "ground_ft_navd88": 23.3
+        },
+        {
+            "id": "clearlake-clc-spacecenter",
+            "lat": 29.5914,
+            "lon": -95.1395,
+            "area": "Clear Lake",
+            "name": "Clear Lake City Blvd near Space Center Blvd",
+            "note": "Approximate site of a 2010 FEMA/Texas Category 4/5 surge marker, removed Jan 2011. Coordinate is the intersection vicinity, not the surveyed footing.",
+            "marker": {
+                "kind": "clear_lake_surge_marker_2010",
+                "bands": [
+                    {
+                        "color": "#2f5fd0",
+                        "label": "CATEGORY 4"
+                    },
+                    {
+                        "color": "#2e8b57",
+                        "label": "CATEGORY 5"
+                    }
+                ],
+                "band_note": "Band order and colors from the Blackburn photo (Baker Institute 2023, Fig. 3); band heights unknown.",
+                "height_ft": 25,
+                "height_note": "Provisional; later reporting describes ~25-ft-tall signs, no drawing recovered."
+            },
+            "scenarios": [
+                {
+                    "id": "harvey_2017",
+                    "kind": "observed",
+                    "label": "Hurricane Harvey (Aug 2017)",
+                    "marks": [
+                        {
+                            "road": "SPACE CENTER BLVD",
+                            "hwm_id": "B-0023",
+                            "elev_ft": 21.69,
+                            "distance_m": 337
+                        },
+                        {
+                            "road": "CLEAR LAKE CITY BLVD",
+                            "hwm_id": "B-0018",
+                            "elev_ft": 20.05,
+                            "distance_m": 562
+                        },
+                        {
+                            "road": "PINELOCH",
+                            "hwm_id": "B-0022",
+                            "elev_ft": 19.28,
+                            "distance_m": 1077
+                        },
+                        {
+                            "road": "ELDORADO",
+                            "hwm_id": "B-0019",
+                            "elev_ft": 17.52,
+                            "distance_m": 2182
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Armand Bayou watershed",
+                    "depth_ft": 0.3,
+                    "wse_ft_navd88": 21.1
+                },
+                {
+                    "id": "hcfcd_100yr",
+                    "kind": "modeled",
+                    "label": "100-year flood (1% annual chance)",
+                    "marks": [
+                        {
+                            "road": "SPACE CENTER BLVD",
+                            "hwm_id": "B-0023",
+                            "elev_ft": 20.20,
+                            "distance_m": 337
+                        },
+                        {
+                            "road": "CLEAR LAKE CITY BLVD",
+                            "hwm_id": "B-0018",
+                            "elev_ft": 19.40,
+                            "distance_m": 562
+                        },
+                        {
+                            "road": "PINELOCH",
+                            "hwm_id": "B-0022",
+                            "elev_ft": 18.60,
+                            "distance_m": 1077
+                        },
+                        {
+                            "road": "ELDORADO",
+                            "hwm_id": "B-0019",
+                            "elev_ft": 16.70,
+                            "distance_m": 2182
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Armand Bayou watershed",
+                    "depth_ft": -0.9,
+                    "wse_ft_navd88": 19.8
+                },
+                {
+                    "id": "hcfcd_500yr",
+                    "kind": "modeled",
+                    "label": "500-year flood (0.2% annual chance)",
+                    "marks": [
+                        {
+                            "road": "SPACE CENTER BLVD",
+                            "hwm_id": "B-0023",
+                            "elev_ft": 22.00,
+                            "distance_m": 337
+                        },
+                        {
+                            "road": "CLEAR LAKE CITY BLVD",
+                            "hwm_id": "B-0018",
+                            "elev_ft": 21.10,
+                            "distance_m": 562
+                        },
+                        {
+                            "road": "PINELOCH",
+                            "hwm_id": "B-0022",
+                            "elev_ft": 20.40,
+                            "distance_m": 1077
+                        },
+                        {
+                            "road": "ELDORADO",
+                            "hwm_id": "B-0019",
+                            "elev_ft": 18.50,
+                            "distance_m": 2182
+                        }
+                    ],
+                    "source": "HCFCD high-water marks, Armand Bayou watershed",
+                    "depth_ft": 0.9,
+                    "wse_ft_navd88": 21.6
+                },
+                {
+                    "id": "marker_25ft_as_elevation",
+                    "kind": "interpretation",
+                    "label": "2010 marker's \"25-ft surge\", read as 25 ft NAVD88",
+                    "source": "Bay Area Citizen, 2011-02-01; datum never documented",
+                    "depth_ft": 4.3,
+                    "wse_ft_navd88": 25.0
+                }
+            ],
+            "ground_ft_navd88": 20.7
+        }
+    ],
+    "method": "depth_ft = water-surface elevation - ground elevation at the site. Water surface is an inverse-distance-weighted blend of HCFCD high-water marks in the same watershed within 2.5 km. Negative depth = site stayed dry. Expect about +/-1 ft from DEM smoothing.",
+    "generated": "2026-09-27",
+    "ground_source": "USGS 3DEP 1/3 arc-second DEM (~10 m), tile USGS_13_n30w096",
+    "vertical_datum": "NAVD88 feet"
+}

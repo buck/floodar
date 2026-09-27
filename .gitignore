@@ -20,3 +20,4 @@ local.properties
 
 # Downloaded geospatial data (DEM tiles, etc.) — large binaries, fetched on demand.
 data/
+.env

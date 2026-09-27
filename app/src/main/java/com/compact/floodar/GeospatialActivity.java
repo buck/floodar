@@ -34,6 +34,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.GuardedBy;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -91,6 +92,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -98,6 +100,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import org.json.JSONException;
 
 /**
  * Main activity for the Geospatial API example.
@@ -116,6 +119,8 @@ public class GeospatialActivity extends AppCompatActivity
   private static final String SHARED_PREFERENCES_SAVED_ANCHORS = "SHARED_PREFERENCES_SAVED_ANCHORS";
   private static final String ALLOW_GEOSPATIAL_ACCESS_KEY = "ALLOW_GEOSPATIAL_ACCESS";
   private static final String ANCHOR_MODE = "ANCHOR_MODE";
+  private static final String FLOOD_SITE_ID = "FLOOD_SITE_ID";
+  private static final String FLOOD_SCENARIO_ID = "FLOOD_SCENARIO_ID";
 
   private static final float Z_NEAR = 0.1f;
   private static final float Z_FAR = 1000f;
@@ -189,6 +194,11 @@ public class GeospatialActivity extends AppCompatActivity
   private SampleRender render;
   private SharedPreferences sharedPreferences;
 
+  // Flood sites from assets/sites.json and the current selection (null until chosen).
+  private List<FloodSite> floodSites = Collections.emptyList();
+  private FloodSite selectedSite;
+  private FloodSite.Scenario selectedScenario;
+
   private String lastStatusText;
   private TextView geospatialPoseTextView;
   private TextView statusTextView;
@@ -258,6 +268,7 @@ public class GeospatialActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+    loadFloodSites();
 
     setContentView(R.layout.activity_main);
     surfaceView = findViewById(R.id.surfaceview);
@@ -1065,10 +1076,103 @@ public class GeospatialActivity extends AppCompatActivity
    */
   private void handleSetAnchorButton() {}
 
+  /** Loads flood sites and restores the last selection. */
+  private void loadFloodSites() {
+    try {
+      floodSites = FloodSite.loadAll(this);
+    } catch (IOException | JSONException e) {
+      Log.e(TAG, "Failed to load flood sites", e);
+      Toast.makeText(this, "Could not load flood sites: " + e, Toast.LENGTH_LONG).show();
+      return;
+    }
+    selectedSite = FloodSite.find(floodSites, sharedPreferences.getString(FLOOD_SITE_ID, ""));
+    if (selectedSite != null) {
+      selectedScenario =
+          selectedSite.findScenario(sharedPreferences.getString(FLOOD_SCENARIO_ID, ""));
+    }
+  }
+
+  /** Two-step picker: site, then scenario at that site. */
+  private void showFloodSitePicker() {
+    if (floodSites.isEmpty()) {
+      Toast.makeText(this, "No flood sites loaded", Toast.LENGTH_SHORT).show();
+      return;
+    }
+    String[] names = new String[floodSites.size()];
+    int checked = -1;
+    for (int i = 0; i < floodSites.size(); i++) {
+      FloodSite site = floodSites.get(i);
+      names[i] = site.area + ": " + site.name;
+      if (site == selectedSite) {
+        checked = i;
+      }
+    }
+    new AlertDialog.Builder(this)
+        .setTitle("Flood site")
+        .setSingleChoiceItems(
+            names,
+            checked,
+            (dialog, which) -> {
+              dialog.dismiss();
+              showScenarioPicker(floodSites.get(which));
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .show();
+  }
+
+  private void showScenarioPicker(FloodSite site) {
+    if (site.scenarios.isEmpty()) {
+      Toast.makeText(this, "No flood data for " + site.name, Toast.LENGTH_SHORT).show();
+      return;
+    }
+    String[] labels = new String[site.scenarios.size()];
+    int checked = -1;
+    for (int i = 0; i < site.scenarios.size(); i++) {
+      FloodSite.Scenario sc = site.scenarios.get(i);
+      labels[i] = sc.label + " — " + describeDepth(sc);
+      if (site == selectedSite && sc == selectedScenario) {
+        checked = i;
+      }
+    }
+    new AlertDialog.Builder(this)
+        .setTitle(site.name)
+        .setSingleChoiceItems(
+            labels,
+            checked,
+            (dialog, which) -> {
+              dialog.dismiss();
+              selectedSite = site;
+              selectedScenario = site.scenarios.get(which);
+              sharedPreferences
+                  .edit()
+                  .putString(FLOOD_SITE_ID, site.id)
+                  .putString(FLOOD_SCENARIO_ID, selectedScenario.id)
+                  .apply();
+              Toast.makeText(
+                      this,
+                      site.name + "\n" + selectedScenario.label + ": " + describeDepth(selectedScenario),
+                      Toast.LENGTH_LONG)
+                  .show();
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .show();
+  }
+
+  private static String describeDepth(FloodSite.Scenario sc) {
+    if (sc.isDry()) {
+      return String.format(Locale.US, "dry (%.1f ft below ground)", -sc.depthFt);
+    }
+    return String.format(Locale.US, "%.1f ft above ground", sc.depthFt);
+  }
+
   /** Menu button to choose anchor type. */
   protected boolean settingsMenuClick(MenuItem item) {
     int itemId = item.getItemId();
     if (itemId == R.id.anchor_reset) {
+      return true;
+    }
+    if (itemId == R.id.flood_site) {
+      showFloodSitePicker();
       return true;
     }
     item.setChecked(!item.isChecked());
