@@ -62,8 +62,8 @@ final class FloodRenderer {
 
   // Gauge labels "1 ft".."MAX_LABEL_FT ft", one per row of a texture atlas.
   private static final int MAX_LABEL_FT = 15;
-  private static final int LABEL_CELL_W = 256;
-  private static final int LABEL_CELL_H = 64;
+  private static final int LABEL_CELL_W = 512;
+  private static final int LABEL_CELL_H = 128;
   private static final float LABEL_HEIGHT_M = 0.08f;
   private static final float LABEL_WIDTH_M = LABEL_HEIGHT_M * LABEL_CELL_W / LABEL_CELL_H;
 
@@ -98,6 +98,7 @@ final class FloodRenderer {
             .setBlend(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
             .setCullFace(false)
             .setDepthWrite(false)
+            .setDepthTest(false) // readable through the water and from any angle
             .setTexture("u_Texture", createLabelAtlas(render));
     // Quad x in 0..1, y in -1..0 (top edge at the anchor height), with UVs.
     labelMesh = texturedQuad(render);
@@ -186,30 +187,45 @@ final class FloodRenderer {
   }
 
   /**
-   * Depth gauge at a ground point: alternating 1-ft stripes up to (and 1 ft past) the water,
-   * with "1 ft", "2 ft"... labels just under each dividing line, turned to face the camera.
+   * Depth gauge at a ground point: alternating 1-ft stripes up to (and 1 ft past) the water.
+   * Labels are drawn separately by {@link #drawGaugeLabels}, after the water.
    */
   void drawGauge(
-      SampleRender render,
-      float[] view,
-      float[] projection,
-      Pose base,
-      float depthMeters,
-      float[] cameraPos) {
-    int feet = Math.max(1, (int) Math.ceil(depthMeters / FOOT) + 1);
+      SampleRender render, float[] view, float[] projection, Pose base, float depthMeters) {
+    int feet = gaugeFeet(depthMeters);
     for (int k = 0; k < feet; k++) {
       drawBox(
           render, view, projection, base, k * FOOT, FOOT, 0.08f, 0.08f,
           (k % 2 == 0) ? STRIPE_A : STRIPE_B);
     }
-    float yawDeg =
-        (float) Math.toDegrees(Math.atan2(cameraPos[0] - base.tx(), cameraPos[2] - base.tz()));
+  }
+
+  private static int gaugeFeet(float depthMeters) {
+    // Round before ceil so 2.0 ft doesn't become 3 through float error.
+    return Math.max(1, (int) Math.ceil(Math.round(depthMeters / FOOT * 100f) / 100f) + 1);
+  }
+
+  /**
+   * "1 ft", "2 ft"... labels just under each gauge divider. Drawn last, without depth test, and
+   * fully facing the camera (turned and tilted), so they stay readable from above and through
+   * the muddy water.
+   */
+  void drawGaugeLabels(
+      SampleRender render, float[] view, float[] projection, Pose base, float depthMeters) {
+    int feet = gaugeFeet(depthMeters);
+    // Camera right and up in world space: rows of the view matrix's rotation part.
+    float rx = view[0], ry = view[4], rz = view[8];
+    float ux = view[1], uy = view[5], uz = view[9];
+    float fx = view[2], fy = view[6], fz = view[10];
     for (int k = 1; k <= Math.min(feet, MAX_LABEL_FT); k++) {
-      Matrix.setIdentityM(model, 0);
-      Matrix.translateM(model, 0, base.tx(), base.ty() + k * FOOT - 0.01f, base.tz());
-      Matrix.rotateM(model, 0, yawDeg, 0f, 1f, 0f);
-      Matrix.translateM(model, 0, 0.06f, 0f, 0f); // just right of the pole
-      Matrix.scaleM(model, 0, LABEL_WIDTH_M, LABEL_HEIGHT_M, 1f);
+      float px = base.tx() + 0.06f * rx;
+      float py = base.ty() + k * FOOT - 0.01f + 0.06f * ry;
+      float pz = base.tz() + 0.06f * rz;
+      // model = translate(p) * [right*w | up*h | forward | 0]
+      model[0] = rx * LABEL_WIDTH_M; model[1] = ry * LABEL_WIDTH_M; model[2] = rz * LABEL_WIDTH_M; model[3] = 0f;
+      model[4] = ux * LABEL_HEIGHT_M; model[5] = uy * LABEL_HEIGHT_M; model[6] = uz * LABEL_HEIGHT_M; model[7] = 0f;
+      model[8] = fx; model[9] = fy; model[10] = fz; model[11] = 0f;
+      model[12] = px; model[13] = py; model[14] = pz; model[15] = 1f;
       Matrix.multiplyMM(modelView, 0, view, 0, model, 0);
       Matrix.multiplyMM(mvp, 0, projection, 0, modelView, 0);
       float cellV = 1f / MAX_LABEL_FT;
@@ -226,18 +242,18 @@ final class FloodRenderer {
         Bitmap.createBitmap(LABEL_CELL_W, LABEL_CELL_H * MAX_LABEL_FT, Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bmp);
     Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
-    fill.setTypeface(Typeface.DEFAULT_BOLD);
-    fill.setTextSize(LABEL_CELL_H * 0.72f);
+    fill.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+    fill.setTextSize(LABEL_CELL_H * 0.70f);
     fill.setColor(Color.WHITE);
     Paint outline = new Paint(fill);
     outline.setStyle(Paint.Style.STROKE);
-    outline.setStrokeWidth(7f);
+    outline.setStrokeWidth(LABEL_CELL_H * 0.06f);
     outline.setColor(Color.argb(230, 0, 0, 0));
     for (int k = 1; k <= MAX_LABEL_FT; k++) {
       String text = k + " ft";
       float baseline = (k - 1) * LABEL_CELL_H + LABEL_CELL_H * 0.78f;
-      canvas.drawText(text, 8f, baseline, outline);
-      canvas.drawText(text, 8f, baseline, fill);
+      canvas.drawText(text, 12f, baseline, outline);
+      canvas.drawText(text, 12f, baseline, fill);
     }
     Texture texture =
         new Texture(

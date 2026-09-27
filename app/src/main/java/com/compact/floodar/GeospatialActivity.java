@@ -983,7 +983,7 @@ public class GeospatialActivity extends AppCompatActivity
       if (site.marker != null) {
         floodRenderer.drawMarker(render, viewMatrix, projectionMatrix, base, site.marker);
       }
-      floodRenderer.drawGauge(render, viewMatrix, projectionMatrix, base, depth, cameraPos);
+      floodRenderer.drawGauge(render, viewMatrix, projectionMatrix, base, depth);
     }
     floodRenderer.drawStreetscape(
         render, streetscapeGeometryToMeshes, viewMatrix, projectionMatrix, waterY, cameraPos);
@@ -1001,6 +1001,10 @@ public class GeospatialActivity extends AppCompatActivity
       };
       floodRenderer.drawSurface(
           render, viewMatrix, projectionMatrix, waterY, cameraPos, uvTransform);
+    }
+    if (anchored) {
+      floodRenderer.drawGaugeLabels(
+          render, viewMatrix, projectionMatrix, groundAnchor.getPose(), depth);
     }
     updateFloodHud(
         site, scenario, anchored, cameraPos[1] - groundY, waterY - groundY, referenceY - groundY);
