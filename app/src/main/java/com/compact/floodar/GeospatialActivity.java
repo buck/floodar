@@ -128,7 +128,6 @@ public class GeospatialActivity extends AppCompatActivity
 
   private static final String SHARED_PREFERENCES_SAVED_ANCHORS = "SHARED_PREFERENCES_SAVED_ANCHORS";
   private static final String ALLOW_GEOSPATIAL_ACCESS_KEY = "ALLOW_GEOSPATIAL_ACCESS";
-  private static final String ANCHOR_MODE = "ANCHOR_MODE";
   private static final String FLOOD_SITE_ID = "FLOOD_SITE_ID";
   private static final String CARE_NOTICE_SHOWN = "CARE_NOTICE_SHOWN";
   private static final String FLOOD_SCENARIO_ID = "FLOOD_SCENARIO_ID";
@@ -328,10 +327,6 @@ public class GeospatialActivity extends AppCompatActivity
             popup.getMenu().findItem(R.id.play_recording).setVisible(!recording);
             popup.getMenu().findItem(R.id.live_camera).setVisible(playbackName != null);
             popup.show();
-            popup
-                .getMenu()
-                .findItem(sharedPreferences.getInt(ANCHOR_MODE, R.id.geospatial))
-                .setChecked(true);
           }
         });
 
@@ -1592,12 +1587,9 @@ public class GeospatialActivity extends AppCompatActivity
     return formatFeetInches(sc.depthFt) + " above " + sc.reference;
   }
 
-  /** Menu button to choose anchor type. */
+  /** MENU button: flood site, session recording and playback. */
   protected boolean settingsMenuClick(MenuItem item) {
     int itemId = item.getItemId();
-    if (itemId == R.id.anchor_reset) {
-      return true;
-    }
     if (itemId == R.id.flood_site) {
       showFloodSitePicker();
       return true;
@@ -1616,18 +1608,6 @@ public class GeospatialActivity extends AppCompatActivity
     }
     if (itemId == R.id.live_camera) {
       restartSessionWithPlayback(null);
-      return true;
-    }
-    item.setChecked(!item.isChecked());
-    sharedPreferences.edit().putInt(ANCHOR_MODE, itemId).commit();
-    if (itemId == R.id.geospatial) {
-      anchorType = AnchorType.GEOSPATIAL;
-      return true;
-    } else if (itemId == R.id.terrain) {
-      anchorType = AnchorType.TERRAIN;
-      return true;
-    } else if (itemId == R.id.rooftop) {
-      anchorType = AnchorType.ROOFTOP;
       return true;
     }
     return false;

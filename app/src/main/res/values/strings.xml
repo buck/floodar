@@ -19,7 +19,7 @@
   <string translatable="false" name="button_text_set_anchor">MENU</string>
   <string translatable="false" name="switch_render_streetscaope_geometry">SHOW GEOMETRY</string>
   <string translatable="false" name="button_text_clear_anchors">CLEAR ALL ANCHORS</string>
-  <string translatable="false" name="tap_screen_text">TAP ON SCREEN TO CREATE ANCHOR</string>
+  <string translatable="false" name="tap_screen_text">Tap the ground to set the water level</string>
   <string translatable="false" name="status_unsupported">This device is not supported.</string>
   <string translatable="false" name="status_pretracking">Localizing your device to set anchor.</string>
   <string translatable="false" name="status_earth_state_error">There was an error state error, check that you have a valid authentication for the ARCore API.</string>
