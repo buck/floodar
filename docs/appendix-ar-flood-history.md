@@ -1,9 +1,9 @@
 > **Appendix: background research.** This report was produced with AI-assisted deep research
-> (OpenAI ChatGPT deep research, September 2026) from the prompt in `ar_flood_history_prompt.md`.
+> (OpenAI ChatGPT deep research, September 2026) from the prompt in [`research/ar_flood_history_prompt.md`](research/ar_flood_history_prompt.md).
 > Inline citation markers from the export have been removed. **Verified bibliographic references,
 > with links and the claims spot-checked against sources, are in
 > [`ar-flood-history-references.md`](ar-flood-history-references.md).** For sentence-level
-> sourcing, see the PDF version (`GPT-ar-flood-report.pdf`).
+> sourcing, see the PDF version ([`research/GPT-ar-flood-report.pdf`](research/GPT-ar-flood-report.pdf)).
 >
 > Corrections from verification: the "2,123 high-water marks / 19 inundation maps" figures are
 > from USGS SIR 2018-5070. The Beckman "AR Flood" USGS provenance is unconfirmed.

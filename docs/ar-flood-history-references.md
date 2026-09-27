@@ -1,7 +1,7 @@
 # AR Flood Visualization: Verified References
 
 *References for the appendix "Augmented-Reality Flood Visualization at Room-to-Street Scale"
-(AI-assisted deep research, `GPT-ar-flood-report.pdf`). Verified 2026-09-27.*
+(AI-assisted deep research, [`research/GPT-ar-flood-report.pdf`](research/GPT-ar-flood-report.pdf)). Verified 2026-09-27.*
 
 **How these were verified.** Every URL from the report's PDF was fetched. Journal articles were
 confirmed against the **Crossref** DOI registry (title, first author, year); J-STAGE and DataCite
@@ -116,5 +116,5 @@ Status:
   v1.54.0, Apr 22 2026"; "Cesium for Unity updated Sept 22 2026") were not re-checked. The
   repositories themselves exist.
 - **Citation placement:** the Markdown export's inline markers could not be mapped reliably to
-  specific sentences. Use the PDF (`GPT-ar-flood-report.pdf`) for sentence-level sourcing and
+  specific sentences. Use the PDF ([`research/GPT-ar-flood-report.pdf`](research/GPT-ar-flood-report.pdf)) for sentence-level sourcing and
   this list for verified bibliographic details.

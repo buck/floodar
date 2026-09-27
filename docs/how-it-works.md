@@ -32,6 +32,19 @@ flood. This enables three ways to use it:
 - **In your home:** stand in a living room, tap the floor, and the water rises to the chosen
   depth indoors (section 1.1).
 
+**Why the app can't fake the GPS location instead:** ARCore's Geospatial API finds the phone's
+position mostly by matching the camera image against Google Street View imagery (Google calls
+this VPS). GPS is only a secondary input. Faking the GPS with Android's mock-location feature
+while the camera sees a different street would either fail to lock on or snap back to the real
+location. Anchoring objects at exact real-world coordinates only works when you are physically
+there. Teleport mode avoids this problem: it moves the *depth*, not the phone.
+
+**Why not trust the phone's altitude?** GPS/VPS altitude is WGS84 ellipsoidal height with
+meter-scale error. Flood data is in NAVD88, which in Houston differs from WGS84 by roughly
+26 m (the geoid offset). Measuring depth from the locally detected ground avoids both problems.
+Across a neighborhood, the error then comes down to ground-elevation data accuracy (about
+±1 ft).
+
 ### 1.1 In your home
 
 Outdoors, flood depth is a number on a gauge. Indoors it's the couch, the bookshelf and the
@@ -67,18 +80,56 @@ or, like the Braesheather family in section 2.3, left Houston afterward. The app
 first launch ("These floods were real"), and presenters should expect that for some people
 this is a memory, not a simulation.
 
-**Why the app can't fake the GPS location instead:** ARCore's Geospatial API finds the phone's
-position mostly by matching the camera image against Google Street View imagery (Google calls
-this VPS). GPS is only a secondary input. Faking the GPS with Android's mock-location feature
-while the camera sees a different street would either fail to lock on or snap back to the real
-location. Anchoring objects at exact real-world coordinates only works when you are physically
-there. Teleport mode avoids this problem: it moves the *depth*, not the phone.
+### 1.2 Prior art and what's new
 
-**Why not trust the phone's altitude?** GPS/VPS altitude is WGS84 ellipsoidal height with
-meter-scale error. Flood data is in NAVD88, which in Houston differs from WGS84 by roughly
-26 m (the geoid offset). Measuring depth from the locally detected ground avoids both problems.
-Across a neighborhood, the error then comes down to ground-elevation data accuracy (about
-±1 ft).
+floodar is **not the first app to put floodwater into someone's real surroundings.** Background
+research ([appendix](appendix-ar-flood-history.md); [verified references](ar-flood-history-references.md))
+found clear precedents:
+
+- **Disaster Scope** (Itamiya & Yoshimura, Japan, 2017–18) overlaid floodwater and debris on
+  real rooms, schools and homes using a depth-sensing phone. It was used in evacuation drills,
+  and a survey reported increased risk awareness. It's the closest precedent to floodar's
+  "in your home" mode.
+- **Weathernews AR inundation simulator** (2020): point your phone at your home or workplace
+  and set the flood depth in 10 cm steps.
+- **Google DepthLab** (2020, open source): includes a `Water` sample that uses depth occlusion
+  to create a flooding effect in the camera view.
+- **Haynes & Lange** (2016/2018): a smartphone flood plane in a real riverside street, with
+  simple building models hiding the water behind them. This is the ancestor of street-scale
+  flood AR.
+- **Recent MR work** connects flood models and digital twins to on-site AR (Tsujimoto et al.
+  2024), and reconstructs disasters in residents' own towns (Matsuda et al. 2024).
+
+The research also supports the effect we noticed. First-person AR flood experiences raised
+perceived vulnerability and preparedness intentions (Mirza et al. 2025). A virtual flood
+increased protective investment (Mol et al. 2022). Recognizable local scenes helped residents
+picture their own evacuation (Banno et al. 2026). **What hasn't been measured is the specific
+effect of seeing floodwater in your own room or street**, compared with a map, a photo or a
+number.
+
+**What floodar adds.** Individually, these pieces exist. The combination is uncommon:
+
+| | floodar | Typical prior work |
+|---|---|---|
+| **Where the water level comes from** | Traceable to specific surveyed HCFCD high-water marks per event (each scenario lists the marks used), HCFCD 100/500-year levels, or a resident's photographed debris line | User-chosen depth, or a model shown without per-site provenance |
+| **Checked against reality** | **Side-by-side of the same street: the resident's Aug 27, 2017 Harvey video vs. floodar in 2026** (§2.5). The debris line was measured from a photo using the siding courses. | Usability surveys; no comparison with footage of the actual event at the same place was found |
+| **Vertical accuracy** | Field-measured: porch-to-street height and drift over a walk, reported honestly (§5) | The background research found few published drift or height measurements for flood AR |
+| **Vertical registration** | Water set relative to a tapped local surface (porch, street, floor), never from phone altitude. This is the approach the research independently recommends. | Often GPS/VPS altitude, which can be meters off |
+| **Rendering on an ordinary phone** | Muddy water that reflects the **live camera image** (a planar-mirror approximation), with flow ripples and a Fresnel term. No LiDAR required; runs on a Pixel 6a. | Transparent planes, environment maps, or depth-sensor/LiDAR hardware |
+| **History** | Reconstructs the 2010 Clear Lake FEMA surge marker and shows why its "Category 4/5" labels and missing datum were a problem (§3) | Not found |
+| **A finding about the data** | Near Brays Bayou, water levels from distant high-water marks missed street depth by more than 2 ft. Relative elevations from the 10 m DEM correctly explained which houses flooded. So: anchor to one local observation, then spread it with the DEM (§2.5). | — |
+
+One line from the background research sums up the design: *"Hydrology determines where the
+water is; the shader determines whether you believe it."* floodar's high-water-mark pipeline
+sets the level; the reflections, ripples and familiar surroundings make people believe it.
+
+**Next steps suggested by the prior art:**
+- A small study comparing a map or number, a plain AR waterline, and the full reflective flood
+  in the participant's own surroundings. This addresses the open research question directly.
+- USGS Harvey depth rasters (SIR 2018-5070) to replace the high-water-mark blend near
+  residential streets.
+- Depth-API occlusion for nearby objects (cars, fences, furniture), following DepthLab.
+- Floating debris and an underwater view, both used effectively by Disaster Scope.
 
 ---
 
