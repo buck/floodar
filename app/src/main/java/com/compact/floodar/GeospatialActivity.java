@@ -1022,8 +1022,23 @@ public class GeospatialActivity extends AppCompatActivity
     float[] origin = cameraPose.getTranslation();
     float[] down = {0f, -1f, 0f};
     HitResult hit = pickGroundHit(frame.hitTest(origin, 0, down, 0));
+    long now = System.currentTimeMillis();
+    if (hit != null && isTerrainHit(hit) && now - lastPlaneGroundMillis < PLANE_HOLD_MILLIS) {
+      // Walking off the edge of detected planes: hold the last plane height rather than jump to
+      // the terrain mesh, which can sit ~3 ft off (field test: "5 ft 1 in" instead of 2 ft).
+      if (!groundSource.equals(SOURCE_LAST_PLANE)) {
+        groundSource = SOURCE_LAST_PLANE;
+      }
+      return;
+    }
     if (hit != null) {
       String source = isUpwardPlaneHit(hit) ? SOURCE_PLANE : SOURCE_TERRAIN;
+      if (source.equals(SOURCE_PLANE)) {
+        lastPlaneGroundMillis = now;
+        if (groundSource.equals(SOURCE_LAST_PLANE)) {
+          groundSource = SOURCE_PLANE; // keep smoothing across a brief gap
+        }
+      }
       float y = hit.getHitPose().ty();
       // Restart smoothing when the source changes so plane and mesh heights never blend.
       groundY = source.equals(groundSource) ? 0.8f * groundY + 0.2f * y : y;
@@ -1071,7 +1086,9 @@ public class GeospatialActivity extends AppCompatActivity
             ? "tapped " + surface + " (" + referenceSource + ")"
             : groundSource + " — tap the " + surface + " to lock";
     boolean feetDetected =
-        groundSource.equals(SOURCE_PLANE) || groundSource.equals(SOURCE_TERRAIN);
+        groundSource.equals(SOURCE_PLANE)
+            || groundSource.equals(SOURCE_TERRAIN)
+            || groundSource.equals(SOURCE_LAST_PLANE);
     String feet =
         !feetDetected
             ? "— (no ground detected under you)"
@@ -1888,6 +1905,9 @@ public class GeospatialActivity extends AppCompatActivity
 
   private static final String SOURCE_PLANE = "detected plane";
   private static final String SOURCE_TERRAIN = "terrain mesh";
+  private static final String SOURCE_LAST_PLANE = "last plane";
+  private static final long PLANE_HOLD_MILLIS = 15000;
+  private long lastPlaneGroundMillis;
 
   private static boolean isUpwardPlaneHit(HitResult hit) {
     Trackable t = hit.getTrackable();
