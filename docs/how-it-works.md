@@ -93,6 +93,12 @@ surface along the channel but not the depth on residential streets. To get stree
 Braeswood Blvd 7.3–7.6 ft, Heatherglen Dr 7.1 ft, Meyerwood/Cliffwood 7.0 ft. About 1,000 of
 the ~15,000 street points had more than 5 ft.
 
+A team member's friends lived on Braesheather Dr. Their house took **about 7 ft of water**
+in Harvey, which is consistent with 7.8 ft on the street and a floor a foot or so above it. They
+left Houston permanently. Meyerland, a center of Houston's Jewish community, flooded three
+times in 27 months (Memorial Day 2015: 6.4 ft here; Tax Day 2016: 5.2 ft; Harvey: 7.8 ft), and
+many families who rebuilt after 2015 flooded again.
+
 This agrees with a field note on HWM D-0028 at Chimney Rock: "debris line in bushes in median
 that corresponds to seed line on households in area."
 
