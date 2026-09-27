@@ -256,7 +256,9 @@ was 4.0 in above the porch floor").
 
 The downward probe runs all the time, so the readout also shows **water at your feet**: water
 level minus the ground detected under the phone. Tap the porch at the debris-line height, walk
-into the street, and the app reports the street depth itself. At the resident's house that
+into the street, and the app reports the street depth itself. A second line, **"Tapped point:
+X in above the ground under you"**, reports the reference's height directly. That makes the
+app a simple level: tap the porch, stand in the street, and read the porch-to-street height. At the resident's house that
 should come out near the knee-deep water in the 2017 video, a direct check of ARCore's height
 accuracy against a known flood.
 

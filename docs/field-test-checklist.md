@@ -49,16 +49,16 @@ at the debris line and just under the door sill. The readout says "Reference: ta
 the street. **Water at your feet ≥ ~20 in**. The 2017 video showed ~24 in *after* the peak;
 kneecap top is 23¼ in in sandals.
 
-- **Water at your feet, mid-street: ____ in**  (gutter: ____ in)
-- So porch above street crown = reading − 4 = ____ in
+- **"Tapped point: __ in above the ground under you"** = porch above street crown: ____ in
+- **Water at your feet, mid-street: ____ in**  (gutter: ____ in)  — should equal the line above + 4 in
 
 ## A5. Drift check
 
 Walk back to the porch and point at the porch floor.
 
-**Expect:** water at your feet returns to **~4 in**.
+**Expect:** "Tapped point" returns to **~0 in**, and water at your feet to **~4 in**.
 
-- Reading back at the porch: ____ in  → drift = reading − 4 = ____ in
+- Tapped point back at the porch: ____ in  → that's the drift
 
 ## A6. Reproduce the 2017 pan
 

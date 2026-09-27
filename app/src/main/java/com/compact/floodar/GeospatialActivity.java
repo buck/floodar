@@ -981,7 +981,8 @@ public class GeospatialActivity extends AppCompatActivity
     if (!scenario.isDry()) {
       floodRenderer.drawSurface(render, viewMatrix, projectionMatrix, waterY, cameraPos);
     }
-    updateFloodHud(site, scenario, anchored, cameraPos[1] - groundY, waterY - groundY);
+    updateFloodHud(
+        site, scenario, anchored, cameraPos[1] - groundY, waterY - groundY, referenceY - groundY);
   }
 
   /**
@@ -1026,7 +1027,8 @@ public class GeospatialActivity extends AppCompatActivity
       FloodSite.Scenario scenario,
       boolean anchored,
       float phoneHeightM,
-      float feetDepthM) {
+      float feetDepthM,
+      float referenceAboveFeetM) {
     long now = System.currentTimeMillis();
     if (now - lastFloodHudMillis < 250) {
       return;
@@ -1067,10 +1069,23 @@ public class GeospatialActivity extends AppCompatActivity
             : feetDepthM <= 0
                 ? String.format(Locale.US, "dry (%s below you)", formatFeetInches(-feetDepthM / 0.3048))
                 : formatFeetInches(feetDepthM / 0.3048);
+    // Height of the tapped point relative to the ground under the phone: a direct measurement
+    // of e.g. porch-above-street.
+    String tapped = "";
+    if (anchored && feetDetected) {
+      double inches = referenceAboveFeetM / 0.0254;
+      tapped =
+          String.format(
+              Locale.US,
+              "\nTapped point: %s (%.0f in) %s the ground under you",
+              formatFeetInches(Math.abs(inches) / 12),
+              Math.abs(inches),
+              inches >= 0 ? "above" : "below");
+    }
     String text =
         String.format(
             Locale.US,
-            "%s%s — %s\n%s: %s\nReference: %s\nWater at your feet: %s  (phone %.1f ft up)\n"
+            "%s%s — %s\n%s: %s\nReference: %s%s\nWater at your feet: %s  (phone %.1f ft up)\n"
                 + "Planes: %d (%.0f m²)  Buildings: %d  VPS: %s",
             isRecording() ? "● REC  " : (playbackName != null ? "▶ REPLAY  " : ""),
             site.area,
@@ -1078,6 +1093,7 @@ public class GeospatialActivity extends AppCompatActivity
             scenario.label,
             depthText,
             reference,
+            tapped,
             feet,
             phoneHeightM / 0.3048f,
             planes,
