@@ -118,6 +118,35 @@ public final class FloodSite {
     return null;
   }
 
+  public static final String CUSTOM_ID = "custom";
+
+  /** A user-entered depth, measured from whatever surface the user taps. */
+  public static FloodSite custom(double depthFt) {
+    try {
+      JSONObject sc =
+          new JSONObject()
+              .put("id", CUSTOM_ID)
+              .put("label", "Custom depth")
+              .put("kind", "interpretation")
+              .put("reference", "floor or ground")
+              .put("depth_ft", depthFt)
+              .put("source", "Entered by the user");
+      JSONObject o =
+          new JSONObject()
+              .put("id", CUSTOM_ID)
+              .put("name", "Custom depth")
+              .put("area", "Your choice")
+              .put("lat", 0)
+              .put("lon", 0)
+              .put("ground_ft_navd88", 0)
+              .put("marker", JSONObject.NULL)
+              .put("scenarios", new JSONArray().put(sc));
+      return new FloodSite(o);
+    } catch (JSONException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
   public static FloodSite find(List<FloodSite> sites, String siteId) {
     for (FloodSite s : sites) {
       if (s.id.equals(siteId)) {

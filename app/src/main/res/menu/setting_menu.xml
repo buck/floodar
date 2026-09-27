@@ -20,6 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
   <item android:id="@+id/flood_site" android:title="Flood site…" app:showAsAction="never"/>
+  <item android:id="@+id/custom_depth" android:title="Custom depth…" app:showAsAction="never"/>
   <item android:id="@+id/record_session" android:title="Record session" app:showAsAction="never"/>
   <item android:id="@+id/play_recording" android:title="Play back recording…" app:showAsAction="never"/>
   <item android:id="@+id/live_camera" android:title="Back to live camera" app:showAsAction="never"/>

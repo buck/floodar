@@ -130,6 +130,7 @@ public class GeospatialActivity extends AppCompatActivity
   private static final String ALLOW_GEOSPATIAL_ACCESS_KEY = "ALLOW_GEOSPATIAL_ACCESS";
   private static final String FLOOD_SITE_ID = "FLOOD_SITE_ID";
   private static final String CARE_NOTICE_SHOWN = "CARE_NOTICE_SHOWN";
+  private static final String CUSTOM_DEPTH_FT = "CUSTOM_DEPTH_FT";
   private static final String FLOOD_SCENARIO_ID = "FLOOD_SCENARIO_ID";
 
   private static final float Z_NEAR = 0.1f;
@@ -1509,10 +1510,81 @@ public class GeospatialActivity extends AppCompatActivity
       Toast.makeText(this, "Could not load flood sites: " + e, Toast.LENGTH_LONG).show();
       return;
     }
-    selectedSite = FloodSite.find(floodSites, sharedPreferences.getString(FLOOD_SITE_ID, ""));
+    String savedSiteId = sharedPreferences.getString(FLOOD_SITE_ID, "");
+    if (FloodSite.CUSTOM_ID.equals(savedSiteId)) {
+      selectedSite = FloodSite.custom(sharedPreferences.getFloat(CUSTOM_DEPTH_FT, 1f));
+      selectedScenario = selectedSite.scenarios.get(0);
+      return;
+    }
+    selectedSite = FloodSite.find(floodSites, savedSiteId);
     if (selectedSite != null) {
       selectedScenario =
           selectedSite.findScenario(sharedPreferences.getString(FLOOD_SCENARIO_ID, ""));
+    }
+  }
+
+  /** Feet + inches entry; the water is placed that far above the surface the user taps. */
+  private void showCustomDepthDialog() {
+    float current = sharedPreferences.getFloat(CUSTOM_DEPTH_FT, 1f);
+    int totalInches = Math.round(current * 12);
+    android.widget.EditText feet = new android.widget.EditText(this);
+    feet.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+    feet.setHint("ft");
+    feet.setText(String.valueOf(totalInches / 12));
+    android.widget.EditText inches = new android.widget.EditText(this);
+    inches.setInputType(
+        android.text.InputType.TYPE_CLASS_NUMBER
+            | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+    inches.setHint("in");
+    inches.setText(String.valueOf(totalInches % 12));
+    android.widget.TextView ftLabel = new android.widget.TextView(this);
+    ftLabel.setText(" ft   ");
+    android.widget.TextView inLabel = new android.widget.TextView(this);
+    inLabel.setText(" in");
+    android.widget.LinearLayout row = new android.widget.LinearLayout(this);
+    row.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+    row.setPadding(60, 30, 60, 0);
+    row.addView(feet, new android.widget.LinearLayout.LayoutParams(0, -2, 1f));
+    row.addView(ftLabel);
+    row.addView(inches, new android.widget.LinearLayout.LayoutParams(0, -2, 1f));
+    row.addView(inLabel);
+    new AlertDialog.Builder(this)
+        .setTitle("Custom water depth")
+        .setMessage("Water will stand this high above the surface you tap (floor, porch, street).")
+        .setView(row)
+        .setPositiveButton(
+            android.R.string.ok,
+            (dialog, which) -> {
+              double ft = parseOrZero(feet.getText().toString())
+                  + parseOrZero(inches.getText().toString()) / 12.0;
+              if (ft <= 0 || ft > 40) {
+                Toast.makeText(this, "Enter a depth between 0 and 40 ft", Toast.LENGTH_SHORT)
+                    .show();
+                return;
+              }
+              selectedSite = FloodSite.custom(ft);
+              selectedScenario = selectedSite.scenarios.get(0);
+              sharedPreferences
+                  .edit()
+                  .putFloat(CUSTOM_DEPTH_FT, (float) ft)
+                  .putString(FLOOD_SITE_ID, FloodSite.CUSTOM_ID)
+                  .putString(FLOOD_SCENARIO_ID, FloodSite.CUSTOM_ID)
+                  .apply();
+              Toast.makeText(
+                      this,
+                      "Custom depth: " + describeDepth(selectedScenario) + "\nTap the surface",
+                      Toast.LENGTH_LONG)
+                  .show();
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .show();
+  }
+
+  private static double parseOrZero(String s) {
+    try {
+      return s.trim().isEmpty() ? 0 : Double.parseDouble(s.trim());
+    } catch (NumberFormatException e) {
+      return 0;
     }
   }
 
@@ -1618,6 +1690,10 @@ public class GeospatialActivity extends AppCompatActivity
     int itemId = item.getItemId();
     if (itemId == R.id.flood_site) {
       showFloodSitePicker();
+      return true;
+    }
+    if (itemId == R.id.custom_depth) {
+      showCustomDepthDialog();
       return true;
     }
     if (itemId == R.id.record_session) {
