@@ -974,7 +974,7 @@ public class GeospatialActivity extends AppCompatActivity
       if (site.marker != null) {
         floodRenderer.drawMarker(render, viewMatrix, projectionMatrix, base, site.marker);
       }
-      floodRenderer.drawGauge(render, viewMatrix, projectionMatrix, base, depth);
+      floodRenderer.drawGauge(render, viewMatrix, projectionMatrix, base, depth, cameraPos);
     }
     floodRenderer.drawStreetscape(
         render, streetscapeGeometryToMeshes, viewMatrix, projectionMatrix, waterY, cameraPos);

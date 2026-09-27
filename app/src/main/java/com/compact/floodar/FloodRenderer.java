@@ -1,5 +1,12 @@
 package com.compact.floodar;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.opengl.GLES30;
+import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.SystemClock;
 import com.google.ar.core.Pose;
@@ -10,6 +17,7 @@ import com.google.ar.core.examples.java.common.samplerender.Mesh;
 import com.google.ar.core.examples.java.common.samplerender.SampleRender;
 import com.google.ar.core.examples.java.common.samplerender.Shader;
 import com.google.ar.core.examples.java.common.samplerender.Shader.BlendFactor;
+import com.google.ar.core.examples.java.common.samplerender.Texture;
 import com.google.ar.core.examples.java.common.samplerender.VertexBuffer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -48,6 +56,15 @@ final class FloodRenderer {
   private final Shader solidShader;
   private final Mesh surfaceMesh;
   private final Mesh boxMesh;
+  private final Shader labelShader;
+  private final Mesh labelMesh;
+
+  // Gauge labels "1 ft".."MAX_LABEL_FT ft", one per row of a texture atlas.
+  private static final int MAX_LABEL_FT = 15;
+  private static final int LABEL_CELL_W = 256;
+  private static final int LABEL_CELL_H = 64;
+  private static final float LABEL_HEIGHT_M = 0.08f;
+  private static final float LABEL_WIDTH_M = LABEL_HEIGHT_M * LABEL_CELL_W / LABEL_CELL_H;
 
   private final float[] model = new float[16];
   private final float[] modelView = new float[16];
@@ -70,6 +87,14 @@ final class FloodRenderer {
             .setFloat("u_FadeEnd", SURFACE_HALF_SIZE);
     solidShader =
         Shader.createFromAssets(render, "shaders/flood.vert", "shaders/flood_solid.frag", null);
+    labelShader =
+        Shader.createFromAssets(render, "shaders/flood_label.vert", "shaders/flood_label.frag", null)
+            .setBlend(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
+            .setCullFace(false)
+            .setDepthWrite(false)
+            .setTexture("u_Texture", createLabelAtlas(render));
+    // Quad x in 0..1, y in -1..0 (top edge at the anchor height), with UVs.
+    labelMesh = texturedQuad(render);
 
     // Unit quad in XZ (-1..1), scaled/translated per frame.
     surfaceMesh =
@@ -136,15 +161,95 @@ final class FloodRenderer {
     render.draw(surfaceMesh, surfaceShader);
   }
 
-  /** Depth gauge at a ground point: alternating 1-ft stripes up to (and 1 ft past) the water. */
+  /**
+   * Depth gauge at a ground point: alternating 1-ft stripes up to (and 1 ft past) the water,
+   * with "1 ft", "2 ft"... labels just under each dividing line, turned to face the camera.
+   */
   void drawGauge(
-      SampleRender render, float[] view, float[] projection, Pose base, float depthMeters) {
+      SampleRender render,
+      float[] view,
+      float[] projection,
+      Pose base,
+      float depthMeters,
+      float[] cameraPos) {
     int feet = Math.max(1, (int) Math.ceil(depthMeters / FOOT) + 1);
     for (int k = 0; k < feet; k++) {
       drawBox(
           render, view, projection, base, k * FOOT, FOOT, 0.08f, 0.08f,
           (k % 2 == 0) ? STRIPE_A : STRIPE_B);
     }
+    float yawDeg =
+        (float) Math.toDegrees(Math.atan2(cameraPos[0] - base.tx(), cameraPos[2] - base.tz()));
+    for (int k = 1; k <= Math.min(feet, MAX_LABEL_FT); k++) {
+      Matrix.setIdentityM(model, 0);
+      Matrix.translateM(model, 0, base.tx(), base.ty() + k * FOOT - 0.01f, base.tz());
+      Matrix.rotateM(model, 0, yawDeg, 0f, 1f, 0f);
+      Matrix.translateM(model, 0, 0.06f, 0f, 0f); // just right of the pole
+      Matrix.scaleM(model, 0, LABEL_WIDTH_M, LABEL_HEIGHT_M, 1f);
+      Matrix.multiplyMM(modelView, 0, view, 0, model, 0);
+      Matrix.multiplyMM(mvp, 0, projection, 0, modelView, 0);
+      float cellV = 1f / MAX_LABEL_FT;
+      labelShader
+          .setMat4("u_ModelViewProjection", mvp)
+          .setVec4("u_UvOffsetScale", new float[] {0f, (k - 1) * cellV, 1f, cellV});
+      render.draw(labelMesh, labelShader);
+    }
+  }
+
+  /** Renders "1 ft".."N ft" (white, dark outline) into one column of cells and uploads it. */
+  private static Texture createLabelAtlas(SampleRender render) {
+    Bitmap bmp =
+        Bitmap.createBitmap(LABEL_CELL_W, LABEL_CELL_H * MAX_LABEL_FT, Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bmp);
+    Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
+    fill.setTypeface(Typeface.DEFAULT_BOLD);
+    fill.setTextSize(LABEL_CELL_H * 0.72f);
+    fill.setColor(Color.WHITE);
+    Paint outline = new Paint(fill);
+    outline.setStyle(Paint.Style.STROKE);
+    outline.setStrokeWidth(7f);
+    outline.setColor(Color.argb(230, 0, 0, 0));
+    for (int k = 1; k <= MAX_LABEL_FT; k++) {
+      String text = k + " ft";
+      float baseline = (k - 1) * LABEL_CELL_H + LABEL_CELL_H * 0.78f;
+      canvas.drawText(text, 8f, baseline, outline);
+      canvas.drawText(text, 8f, baseline, fill);
+    }
+    Texture texture =
+        new Texture(
+            render, Texture.Target.TEXTURE_2D, Texture.WrapMode.CLAMP_TO_EDGE, /*useMipmaps=*/ false);
+    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture.getTextureId());
+    GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bmp, 0);
+    GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0);
+    bmp.recycle();
+    return texture;
+  }
+
+  private static Mesh texturedQuad(SampleRender render) {
+    float[] pos = {0, 0, 0, 1, 0, 0, 1, -1, 0, 0, -1, 0};
+    // Bitmap row 0 is the top of the image; GLUtils uploads it as t = 0.
+    float[] uv = {0, 0, 1, 0, 1, 1, 0, 1};
+    return new Mesh(
+        render,
+        Mesh.PrimitiveMode.TRIANGLES,
+        new IndexBuffer(render, intBuffer(new int[] {0, 2, 1, 0, 3, 2})),
+        new VertexBuffer[] {
+          new VertexBuffer(render, 3, floatBuffer(pos)), new VertexBuffer(render, 2, floatBuffer(uv))
+        });
+  }
+
+  private static FloatBuffer floatBuffer(float[] a) {
+    FloatBuffer b =
+        ByteBuffer.allocateDirect(a.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer().put(a);
+    b.rewind();
+    return b;
+  }
+
+  private static IntBuffer intBuffer(int[] a) {
+    IntBuffer b =
+        ByteBuffer.allocateDirect(a.length * 4).order(ByteOrder.nativeOrder()).asIntBuffer().put(a);
+    b.rewind();
+    return b;
   }
 
   /** The 2010 Clear Lake marker: blue Category 4 band, green Category 5 band, grey cap. */
