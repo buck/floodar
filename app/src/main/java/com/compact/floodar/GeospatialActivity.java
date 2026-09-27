@@ -1135,6 +1135,10 @@ public class GeospatialActivity extends AppCompatActivity
         () -> {
           floodInfoView.setVisibility(View.VISIBLE);
           floodInfoView.setText(text);
+          if (anchored) {
+            // Reference set: the "tap the ground" hint has done its job.
+            tapScreenTextView.setVisibility(View.GONE);
+          }
         });
   }
 
