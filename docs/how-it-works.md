@@ -348,6 +348,15 @@ screen-record its playback later with the final rendering.
 - **Clear Lake has no surge scenario yet.** Only rainfall floods and the literal
   "25 ft NAVD88" reading are available.
 
+- **Height between distant surfaces is unreliable.** At the resident's house, ARCore measured
+  the porch as 0–1 in above the walkway (the real step is 1–2 in) and about 4 in above
+  mid-street. That held with both surfaces confirmed as detected planes. The 2017 evidence
+  (peak 4 in above the porch; ~24 in mid-street after the peak) implies at least ~20 in. The
+  cause is unresolved: ARCore height drift or plane fitting over ~15 m, or the 2017 inference.
+  The app is therefore treated as an **educational recreation**, not survey-grade: each
+  scenario is shown relative to the surface you tap. For the Home site, the most faithful view
+  is the video-based "2 ft above the street", tapped in the street.
+
 ---
 
 ## 6. Field test procedure
