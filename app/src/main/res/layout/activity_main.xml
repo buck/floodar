@@ -46,6 +46,18 @@
       android:background="#bf323232"/>
 
   <TextView
+      android:id="@+id/flood_info_view"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/geospatial_pose_view"
+      android:paddingHorizontal="20dp"
+      android:paddingVertical="8dp"
+      android:textColor="#ffffff"
+      android:textSize="15sp"
+      android:background="#bf0b3d91"
+      android:visibility="gone"/>
+
+  <TextView
       android:id="@+id/tap_screen_text_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

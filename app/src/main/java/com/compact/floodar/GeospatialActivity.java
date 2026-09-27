@@ -196,8 +196,19 @@ public class GeospatialActivity extends AppCompatActivity
 
   // Flood sites from assets/sites.json and the current selection (null until chosen).
   private List<FloodSite> floodSites = Collections.emptyList();
-  private FloodSite selectedSite;
-  private FloodSite.Scenario selectedScenario;
+  private volatile FloodSite selectedSite;
+  private volatile FloodSite.Scenario selectedScenario;
+
+  // Flood rendering state (GL thread). Ground is the world-Y the water depth is measured from:
+  // a tapped anchor if set, otherwise a smoothed downward hit test from the camera.
+  private FloodRenderer floodRenderer;
+  private TextView floodInfoView;
+  private Anchor groundAnchor;
+  private Float groundY;
+  private String groundSource = "searching";
+  private int groundProbeFrame;
+  private long lastFloodHudMillis;
+  private static final float ASSUMED_PHONE_HEIGHT_M = 1.4f;
 
   private String lastStatusText;
   private TextView geospatialPoseTextView;
@@ -275,6 +286,7 @@ public class GeospatialActivity extends AppCompatActivity
     geospatialPoseTextView = findViewById(R.id.geospatial_pose_view);
     statusTextView = findViewById(R.id.status_text_view);
     tapScreenTextView = findViewById(R.id.tap_screen_text_view);
+    floodInfoView = findViewById(R.id.flood_info_view);
     setAnchorButton = findViewById(R.id.set_anchor_button);
     clearAnchorsButton = findViewById(R.id.clear_anchors_button);
 
@@ -561,6 +573,7 @@ public class GeospatialActivity extends AppCompatActivity
     // an IOException.
     try {
       planeRenderer = new PlaneRenderer(render);
+      floodRenderer = new FloodRenderer(render);
       backgroundRenderer = new BackgroundRenderer(render);
       virtualSceneFramebuffer = new Framebuffer(render, /* width= */ 1, /* height= */ 1);
 
@@ -755,8 +768,9 @@ public class GeospatialActivity extends AppCompatActivity
       backgroundRenderer.drawBackground(render);
     }
 
-    // If not tracking, don't draw 3D objects.
-    if (camera.getTrackingState() != TrackingState.TRACKING || state != State.LOCALIZED) {
+    // If not tracking, don't draw 3D objects. Planes and flood only need camera tracking;
+    // geospatial anchors below also need VPS localization.
+    if (camera.getTrackingState() != TrackingState.TRACKING) {
       return;
     }
 
@@ -786,6 +800,12 @@ public class GeospatialActivity extends AppCompatActivity
         session.getAllTrackables(Plane.class),
         camera.getDisplayOrientedPose(),
         projectionMatrix);
+
+    drawFlood(frame, camera);
+
+    if (state != State.LOCALIZED) {
+      return;
+    }
 
     // Visualize anchors created by touch.
     render.clear(virtualSceneFramebuffer, 0f, 0f, 0f, 0f);
@@ -878,6 +898,127 @@ public class GeospatialActivity extends AppCompatActivity
 
     // Compose the virtual scene with the background.
     backgroundRenderer.drawVirtualScene(render, virtualSceneFramebuffer, Z_NEAR, Z_FAR);
+  }
+
+  /** Draws the selected flood scenario relative to the current ground estimate. */
+  private void drawFlood(Frame frame, Camera camera) {
+    FloodSite site = selectedSite;
+    FloodSite.Scenario scenario = selectedScenario;
+    if (site == null || scenario == null) {
+      return;
+    }
+    Pose cameraPose = camera.getPose();
+    float[] cameraPos = cameraPose.getTranslation();
+    updateGround(frame, cameraPose);
+
+    float depth = (float) scenario.depthMeters();
+    float waterY = groundY + depth;
+
+    // Opaque poles first, then translucent water on buildings/terrain, then the surface.
+    if (groundAnchor != null && groundAnchor.getTrackingState() == TrackingState.TRACKING) {
+      Pose base = groundAnchor.getPose();
+      if (site.marker != null) {
+        floodRenderer.drawMarker(render, viewMatrix, projectionMatrix, base, site.marker);
+      }
+      floodRenderer.drawGauge(render, viewMatrix, projectionMatrix, base, depth);
+    }
+    floodRenderer.drawStreetscape(
+        render, streetscapeGeometryToMeshes, viewMatrix, projectionMatrix, waterY, cameraPos);
+    if (!scenario.isDry()) {
+      floodRenderer.drawSurface(render, viewMatrix, projectionMatrix, waterY, cameraPos);
+    }
+    updateFloodHud(site, scenario, cameraPos[1] - groundY);
+  }
+
+  /**
+   * Keeps {@link #groundY} current. A tapped ground anchor wins; otherwise every few frames cast
+   * a ray straight down from the camera and take the first horizontal plane or Streetscape
+   * terrain hit, smoothed. With no hit yet, assume the phone is held at chest height.
+   */
+  private void updateGround(Frame frame, Pose cameraPose) {
+    if (groundAnchor != null && groundAnchor.getTrackingState() == TrackingState.TRACKING) {
+      groundY = groundAnchor.getPose().ty();
+      return;
+    }
+    if (groundY == null) {
+      groundY = cameraPose.ty() - ASSUMED_PHONE_HEIGHT_M;
+      groundSource = "assumed 1.4 m below phone";
+    }
+    if (groundProbeFrame++ % 10 != 0) {
+      return;
+    }
+    float[] origin = cameraPose.getTranslation();
+    float[] down = {0f, -1f, 0f};
+    for (HitResult hit : frame.hitTest(origin, 0, down, 0)) {
+      Trackable t = hit.getTrackable();
+      String source = null;
+      if (t instanceof Plane
+          && ((Plane) t).getType() == Plane.Type.HORIZONTAL_UPWARD_FACING
+          && ((Plane) t).isPoseInPolygon(hit.getHitPose())) {
+        source = "detected plane";
+      } else if (t instanceof StreetscapeGeometry
+          && ((StreetscapeGeometry) t).getType() == StreetscapeGeometry.Type.TERRAIN) {
+        source = "Google terrain mesh";
+      }
+      if (source != null) {
+        float y = hit.getHitPose().ty();
+        boolean fresh = !groundSource.equals("detected plane")
+            && !groundSource.equals("Google terrain mesh");
+        groundY = fresh ? y : 0.8f * groundY + 0.2f * y;
+        groundSource = source;
+        return;
+      }
+    }
+  }
+
+  private void updateFloodHud(FloodSite site, FloodSite.Scenario scenario, float phoneHeightM) {
+    long now = System.currentTimeMillis();
+    if (now - lastFloodHudMillis < 250) {
+      return;
+    }
+    lastFloodHudMillis = now;
+    int planes = 0;
+    float area = 0f;
+    for (Plane p : session.getAllTrackables(Plane.class)) {
+      if (p.getTrackingState() == TrackingState.TRACKING
+          && p.getSubsumedBy() == null
+          && p.getType() == Plane.Type.HORIZONTAL_UPWARD_FACING) {
+        planes++;
+        area += p.getExtentX() * p.getExtentZ();
+      }
+    }
+    int buildings = 0;
+    for (StreetscapeGeometry g : streetscapeGeometryToMeshes.keySet()) {
+      if (g.getTrackingState() == TrackingState.TRACKING
+          && g.getType() == StreetscapeGeometry.Type.BUILDING) {
+        buildings++;
+      }
+    }
+    String depthText =
+        scenario.isDry()
+            ? String.format(Locale.US, "dry here (water %.1f ft below ground)", -scenario.depthFt)
+            : String.format(Locale.US, "%.1f ft of water", scenario.depthFt);
+    String ground =
+        groundAnchor != null ? "tapped point" : groundSource + " — tap the ground to lock";
+    String text =
+        String.format(
+            Locale.US,
+            "%s — %s\n%s: %s\nGround: %s (phone %.1f ft up)\nPlanes: %d (%.0f m²)  Buildings: %d  VPS: %s",
+            site.area,
+            site.name,
+            scenario.label,
+            depthText,
+            ground,
+            phoneHeightM / 0.3048f,
+            planes,
+            area,
+            buildings,
+            state);
+    runOnUiThread(
+        () -> {
+          floodInfoView.setVisibility(View.VISIBLE);
+          floodInfoView.setText(text);
+        });
   }
 
   /**
@@ -1431,6 +1572,13 @@ public class GeospatialActivity extends AppCompatActivity
     // Handle taps. Handling only one tap per frame, as taps are usually low frequency
     // compared to frame rate.
     synchronized (singleTapLock) {
+      if (queuedSingleTap != null
+          && selectedScenario != null
+          && cameraTrackingState == TrackingState.TRACKING) {
+        setGroundFromTap(frame, queuedSingleTap);
+        queuedSingleTap = null;
+        return;
+      }
       synchronized (anchorsLock) {
         if (queuedSingleTap == null
             || anchors.size() >= MAXIMUM_ANCHORS
@@ -1455,6 +1603,30 @@ public class GeospatialActivity extends AppCompatActivity
       }
       queuedSingleTap = null;
     }
+  }
+
+  /** Moves the ground point (and gauge/marker) to the first ground-like surface under a tap. */
+  private void setGroundFromTap(Frame frame, MotionEvent tap) {
+    for (HitResult hit : frame.hitTest(tap)) {
+      Trackable t = hit.getTrackable();
+      boolean ground =
+          (t instanceof Plane
+                  && ((Plane) t).getType() == Plane.Type.HORIZONTAL_UPWARD_FACING
+                  && ((Plane) t).isPoseInPolygon(hit.getHitPose()))
+              || (t instanceof StreetscapeGeometry
+                  && ((StreetscapeGeometry) t).getType() == StreetscapeGeometry.Type.TERRAIN);
+      if (ground) {
+        if (groundAnchor != null) {
+          groundAnchor.detach();
+        }
+        groundAnchor = hit.createAnchor();
+        return;
+      }
+    }
+    runOnUiThread(
+        () ->
+            Toast.makeText(this, "No ground found there — tap a detected plane", Toast.LENGTH_SHORT)
+                .show());
   }
 
   /** Returns {@code true} if and only if the hit can be used to create an Anchor reliably. */
