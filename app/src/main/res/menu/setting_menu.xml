@@ -20,6 +20,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
   <item android:id="@+id/flood_site" android:title="Flood site…" app:showAsAction="never"/>
+  <item android:id="@+id/record_session" android:title="Record session" app:showAsAction="never"/>
+  <item android:id="@+id/play_recording" android:title="Play back recording…" app:showAsAction="never"/>
+  <item android:id="@+id/live_camera" android:title="Back to live camera" app:showAsAction="never"/>
   <item android:id="@+id/anchor_reset" android:title="Anchor Setting" app:showAsAction="ifRoom"/>
   <group android:checkableBehavior="single" >
     <item android:id="@+id/geospatial" android:title="Geospatial" app:showAsAction=" never"/>

@@ -75,7 +75,7 @@
       android:text="@string/button_text_set_anchor"
       android:drawableRight="@drawable/ic_settings_white"
       android:layout_alignParentRight="true"
-      android:visibility="invisible"/>
+      android:visibility="visible"/>
 
   <Switch
       android:id="@+id/streetscape_geometry_switch"

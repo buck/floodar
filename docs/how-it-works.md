@@ -169,7 +169,7 @@ actually supports.
 
 ### 4.2 Choosing a flood
 
-Settings menu (gear button) → **Flood site…** opens a two-step picker. First choose a site,
+**MENU** button (bottom right, always visible) → **Flood site…** opens a two-step picker. First choose a site,
 grouped by area. Then choose a scenario; each one shows its depth ("7.8 ft above ground", or
 "dry"). The choice is saved and restored the next time the app starts.
 
@@ -230,6 +230,29 @@ Planes: 3 (42 m²)  Buildings: 17  VPS: LOCALIZED
 The **Planes** line reports how many upward-facing planes are tracked and their total area.
 This is the measurement for the project's original question: how well ARCore detects and keeps
 the outdoor ground.
+
+### 4.7 Session recording and playback
+
+The menu can record an AR session and replay it later, without going back to the site:
+
+- **Record session / Stop recording.** Uses ARCore Recording & Playback to save the camera
+  video plus motion-sensor and location data as an MP4 file in
+  `/sdcard/Android/data/com.compact.floodar/files/recordings/floodar-YYYYMMDD-HHMMSS.mp4`.
+  Files are about **2.5 MB per second**, so a 2-minute walk is about 300 MB. Recording stops
+  automatically if the app is paused.
+- **Play back recording…** lists recordings, newest first. Choosing one restarts the AR session
+  on that recording instead of the live camera. Tracking, planes, Geospatial data and the flood
+  rendering all run as if you were there again, so you can **pick a different flood during
+  playback** or re-render after a code change. The readout shows `▶ REPLAY`.
+- **Back to live camera** closes the playback session and opens a fresh live session. ARCore
+  1.56 throws an error if you try to clear the playback dataset instead.
+- Copy recordings to a computer with
+  `adb pull /sdcard/Android/data/com.compact.floodar/files/recordings/`.
+
+For demo **video**, use Android's built-in screen recorder (Quick Settings → Screen record).
+The app draws the camera image and the overlay together, so the screen recording captures
+exactly what is on screen. Combining the two: record the session once at the site, then
+screen-record its playback later with the final rendering.
 
 ---
 

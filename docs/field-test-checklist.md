@@ -11,7 +11,7 @@ above a front door (6 ft 8 in).
 ## Test 1 — Launch and pick a flood
 
 1. Open floodar and allow camera and location.
-2. Tap the gear, then **Flood site…**, then **Meyerland: Braesheather Dr at Millbury Dr**, then
+2. Tap **MENU** (bottom right), then **Flood site…**, then **Meyerland: Braesheather Dr at Millbury Dr**, then
    **Hurricane Harvey**.
 
 **Expect:** a toast reading "…7.8 ft above ground", and a blue panel at the top of the screen.
@@ -77,6 +77,9 @@ gauge showing only **4.3 ft** of water.
 ---
 
 ## Capture for the demo
+
+☐ **MENU → Record session** before Tests 3–4 at Braesheather, then **Stop recording** after
+(about 2.5 MB/s). The walk can then be replayed at home with MENU → Play back recording…
 
 ☐ Screen recording (swipe down from the top, then **Screen record**) of Tests 3–4 at Braesheather
 

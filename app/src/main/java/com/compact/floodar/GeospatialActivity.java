@@ -19,6 +19,7 @@ package com.compact.floodar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
@@ -54,7 +55,10 @@ import com.google.ar.core.Plane;
 import com.google.ar.core.Point;
 import com.google.ar.core.Point.OrientationMode;
 import com.google.ar.core.PointCloud;
+import com.google.ar.core.PlaybackStatus;
 import com.google.ar.core.Pose;
+import com.google.ar.core.RecordingConfig;
+import com.google.ar.core.RecordingStatus;
 import com.google.ar.core.ResolveAnchorOnRooftopFuture;
 import com.google.ar.core.ResolveAnchorOnTerrainFuture;
 import com.google.ar.core.Session;
@@ -87,11 +91,14 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+import com.google.ar.core.exceptions.TextureNotSetException;
 import com.google.ar.core.exceptions.UnsupportedConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -99,6 +106,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.json.JSONException;
 
@@ -210,6 +219,11 @@ public class GeospatialActivity extends AppCompatActivity
   private long lastFloodHudMillis;
   private static final float ASSUMED_PHONE_HEIGHT_M = 1.4f;
 
+  // ARCore session recording/playback (camera + sensors as MP4, replayable through the app).
+  private File currentRecording;
+  private String playbackName;
+  private boolean playbackFinishedShown;
+
   private String lastStatusText;
   private TextView geospatialPoseTextView;
   private TextView statusTextView;
@@ -297,6 +311,14 @@ public class GeospatialActivity extends AppCompatActivity
             PopupMenu popup = new PopupMenu(GeospatialActivity.this, v);
             popup.setOnMenuItemClickListener(GeospatialActivity.this::settingsMenuClick);
             popup.inflate(R.menu.setting_menu);
+            boolean recording = isRecording();
+            popup
+                .getMenu()
+                .findItem(R.id.record_session)
+                .setTitle(recording ? "Stop recording" : "Record session")
+                .setVisible(playbackName == null);
+            popup.getMenu().findItem(R.id.play_recording).setVisible(!recording);
+            popup.getMenu().findItem(R.id.live_camera).setVisible(playbackName != null);
             popup.show();
             popup
                 .getMenu()
@@ -569,6 +591,10 @@ public class GeospatialActivity extends AppCompatActivity
 
   @Override
   public void onSurfaceCreated(SampleRender render) {
+    // A new GL context means a new camera texture; hand it to the session on the next frame.
+    // Without this, resuming after a GL pause (app switch, playback) throws
+    // TextureNotSetException from session.update().
+    hasSetTextureNames = false;
     // Prepare the rendering objects. This involves reading shaders and 3D model files, so may throw
     // an IOException.
     try {
@@ -696,8 +722,26 @@ public class GeospatialActivity extends AppCompatActivity
       Log.e(TAG, "Camera not available during onDrawFrame", e);
       messageSnackbarHelper.showError(this, "Camera not available. Try restarting the app.");
       return;
+    } catch (TextureNotSetException e) {
+      // Session lost its camera texture (e.g. after switching to/from playback); rebind next frame.
+      Log.w(TAG, "Camera texture not set; rebinding", e);
+      hasSetTextureNames = false;
+      return;
     }
     Camera camera = frame.getCamera();
+
+    if (playbackName != null
+        && !playbackFinishedShown
+        && session.getPlaybackStatus() == PlaybackStatus.FINISHED) {
+      playbackFinishedShown = true;
+      runOnUiThread(
+          () ->
+              Toast.makeText(
+                      this,
+                      "Playback finished — menu → Play back recording… to replay",
+                      Toast.LENGTH_LONG)
+                  .show());
+    }
 
     // BackgroundRenderer.updateDisplayGeometry must be called every frame to update the coordinates
     // used to draw the background camera image.
@@ -751,7 +795,6 @@ public class GeospatialActivity extends AppCompatActivity
       if (anchors.size() >= MAXIMUM_ANCHORS) {
         runOnUiThread(
             () -> {
-              setAnchorButton.setVisibility(View.INVISIBLE);
               tapScreenTextView.setVisibility(View.INVISIBLE);
             });
       }
@@ -1003,7 +1046,8 @@ public class GeospatialActivity extends AppCompatActivity
     String text =
         String.format(
             Locale.US,
-            "%s — %s\n%s: %s\nGround: %s (phone %.1f ft up)\nPlanes: %d (%.0f m²)  Buildings: %d  VPS: %s",
+            "%s%s — %s\n%s: %s\nGround: %s (phone %.1f ft up)\nPlanes: %d (%.0f m²)  Buildings: %d  VPS: %s",
+            isRecording() ? "● REC  " : (playbackName != null ? "▶ REPLAY  " : ""),
             site.area,
             site.name,
             scenario.label,
@@ -1166,7 +1210,6 @@ public class GeospatialActivity extends AppCompatActivity
       localizingStartTimestamp = System.currentTimeMillis();
       runOnUiThread(
           () -> {
-            setAnchorButton.setVisibility(View.INVISIBLE);
             tapScreenTextView.setVisibility(View.INVISIBLE);
             clearAnchorsButton.setVisibility(View.INVISIBLE);
           });
@@ -1216,6 +1259,131 @@ public class GeospatialActivity extends AppCompatActivity
    * create the anchors so that the anchors will be loaded next time the app is launched.
    */
   private void handleSetAnchorButton() {}
+
+  private File recordingsDir() {
+    File dir = new File(getExternalFilesDir(null), "recordings");
+    dir.mkdirs();
+    return dir;
+  }
+
+  private boolean isRecording() {
+    return session != null && session.getRecordingStatus() == RecordingStatus.OK;
+  }
+
+  /**
+   * Records camera + sensor data to an MP4 under
+   * /sdcard/Android/data/com.compact.floodar/files/recordings/ for later in-app playback.
+   */
+  private void startRecording() {
+    if (session == null) {
+      return;
+    }
+    String stamp = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(new Date());
+    currentRecording = new File(recordingsDir(), "floodar-" + stamp + ".mp4");
+    try {
+      session.startRecording(
+          new RecordingConfig(session)
+              .setMp4DatasetUri(Uri.fromFile(currentRecording))
+              .setAutoStopOnPause(true));
+      Toast.makeText(this, "Recording session…", Toast.LENGTH_SHORT).show();
+    } catch (Exception e) {
+      Log.e(TAG, "Failed to start recording", e);
+      Toast.makeText(this, "Recording failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+      currentRecording = null;
+    }
+  }
+
+  private void stopRecording() {
+    try {
+      session.stopRecording();
+      Toast.makeText(
+              this, "Saved " + (currentRecording != null ? currentRecording.getName() : ""),
+              Toast.LENGTH_LONG)
+          .show();
+    } catch (Exception e) {
+      Log.e(TAG, "Failed to stop recording", e);
+      Toast.makeText(this, "Stop failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+  }
+
+  private void showRecordingPicker() {
+    File[] files = recordingsDir().listFiles((dir, name) -> name.endsWith(".mp4"));
+    if (files == null || files.length == 0) {
+      Toast.makeText(this, "No recordings yet", Toast.LENGTH_SHORT).show();
+      return;
+    }
+    Arrays.sort(files, (a, b) -> b.getName().compareTo(a.getName())); // newest first
+    String[] names = new String[files.length];
+    for (int i = 0; i < files.length; i++) {
+      names[i] =
+          String.format(
+              Locale.US, "%s (%.0f MB)", files[i].getName(), files[i].length() / 1e6);
+    }
+    new AlertDialog.Builder(this)
+        .setTitle("Play back recording")
+        .setItems(names, (dialog, which) -> restartSessionWithPlayback(files[which]))
+        .setNegativeButton(android.R.string.cancel, null)
+        .show();
+  }
+
+  /**
+   * Switches between a recorded dataset and the live camera (file == null). The GL surface is
+   * paused first so onDrawFrame never calls update() on a paused session.
+   *
+   * <p>Playback: set the dataset on the paused session. Live: ARCore 1.56 throws on
+   * setPlaybackDatasetUri(null), so close the session and create a fresh one.
+   */
+  private void restartSessionWithPlayback(File file) {
+    if (session == null) {
+      return;
+    }
+    surfaceView.onPause();
+    session.pause();
+
+    // Anything tied to the old camera feed / session is stale.
+    if (groundAnchor != null) {
+      groundAnchor.detach();
+      groundAnchor = null;
+    }
+    groundY = null;
+    groundSource = "searching";
+    hasSetTextureNames = false; // changing the dataset drops the camera texture binding
+    playbackFinishedShown = false;
+    state = State.PRETRACKING;
+    localizingStartTimestamp = System.currentTimeMillis();
+
+    if (file == null) {
+      session.close();
+      session = null;
+      synchronized (anchorsLock) {
+        anchors.clear();
+        terrainAnchors.clear();
+        rooftopAnchors.clear();
+      }
+      streetscapeGeometryToMeshes.clear();
+      playbackName = null;
+      createSession(); // creates, configures and resumes a live session
+      surfaceView.onResume();
+      return;
+    }
+
+    try {
+      session.setPlaybackDatasetUri(Uri.fromFile(file));
+      playbackName = file.getName();
+    } catch (Exception e) {
+      Log.e(TAG, "Failed to set playback dataset", e);
+      Toast.makeText(this, "Playback failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+      playbackName = null;
+    }
+    try {
+      session.resume();
+    } catch (CameraNotAvailableException e) {
+      Log.e(TAG, "Camera not available on resume", e);
+      messageSnackbarHelper.showError(this, "Camera not available. Try restarting the app.");
+      return;
+    }
+    surfaceView.onResume();
+  }
 
   /** Loads flood sites and restores the last selection. */
   private void loadFloodSites() {
@@ -1314,6 +1482,22 @@ public class GeospatialActivity extends AppCompatActivity
     }
     if (itemId == R.id.flood_site) {
       showFloodSitePicker();
+      return true;
+    }
+    if (itemId == R.id.record_session) {
+      if (isRecording()) {
+        stopRecording();
+      } else {
+        startRecording();
+      }
+      return true;
+    }
+    if (itemId == R.id.play_recording) {
+      showRecordingPicker();
+      return true;
+    }
+    if (itemId == R.id.live_camera) {
+      restartSessionWithPlayback(null);
       return true;
     }
     item.setChecked(!item.isChecked());

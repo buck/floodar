@@ -16,7 +16,7 @@
 -->
 <resources>
   <string translatable="false" name="app_name">Floodar</string>
-  <string translatable="false" name="button_text_set_anchor">ANCHOR SETTING</string>
+  <string translatable="false" name="button_text_set_anchor">MENU</string>
   <string translatable="false" name="switch_render_streetscaope_geometry">SHOW GEOMETRY</string>
   <string translatable="false" name="button_text_clear_anchors">CLEAR ALL ANCHORS</string>
   <string translatable="false" name="tap_screen_text">TAP ON SCREEN TO CREATE ANCHOR</string>
