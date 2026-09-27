@@ -1,112 +1,149 @@
 # floodar Field Test Checklist
 
-**Where:** home street first (teleport test), then **Braesheather Dr at Millbury Dr**,
-Meyerland (29.67764, −95.46445). Go in daylight. Bring a charged phone.
+Go in daylight with a charged phone. **Part A** is at home, **Part B** in Meyerland
+(Braesheather Dr at Millbury Dr, 29.67764, −95.46445).
 
-**Scale check:** 7.8 ft is just above the top of a typical 7 ft garage door, and about a foot
-above a front door (6 ft 8 in).
+**Everything is under MENU** (bottom right): Flood site…, Record session, Play back recording….
+The blue readout at the top shows the site, the flood, the reference surface, **water at your
+feet**, and Planes / Buildings / VPS status.
 
 ---
 
-## Test 1 — Launch and pick a flood
+# Part A — Home
 
-1. Open floodar and allow camera and location.
-2. Tap **MENU** (bottom right), then **Flood site…**, then **Meyerland: Braesheather Dr at Millbury Dr**, then
-   **Hurricane Harvey**.
+## A1. Pick the flood
 
-**Expect:** a toast reading "…7.8 ft above ground", and a blue panel at the top of the screen.
+MENU → Flood site… → **Home: Home (observer's street)** → **Harvey peak (debris line at the door)**.
 
-☐ OK  Notes: ______________________________________________
+**Expect:** a toast reading "4 in above porch … Tap the porch to set the reference".
 
-## Test 2 — Ground detection (the original v1 question)
+☐ OK
 
-1. Point the phone at the street or lawn, 1–3 m ahead. Sweep slowly side to side.
+## A2. Ground detection (the original v1 question)
 
-**Expect:** a white grid on the ground; the **Planes** count goes up; "Ground: detected plane".
+In the street, point 1–3 m ahead and sweep slowly side to side.
 
-- Seconds until the first plane: ____
-- Largest area (m²): ____
+**Expect:** a white grid on the pavement; the **Planes** count goes up.
+
+- Seconds until the first plane: ____  Largest area (m²): ____
 - Distance where the grid stops (m): ____
 - Did it hold while you walked 20 m? ☐ yes ☐ no
 
-## Test 3 — Water surface and gauge
+## A3. Set the porch as reference
 
-1. **Tap the street** in front of you.
+On the porch, sweep the porch floor until the grid appears (a doormat helps). **Tap the
+porch floor.**
 
-**Expect:** a red/white striped pole at the tap, with 1-ft stripes (count ~8). A translucent
-blue sheet above head height, since the phone is about 4.5 ft up and the water 7.8 ft. The
-readout says "Ground: tapped point".
+**Expect:** a red/white striped gauge at the tap, and water **4 in above the porch floor**,
+at the debris line and just under the door sill. The readout says "Reference: tapped porch".
 
-- Does the pole stay put when you walk around it? ☐ yes ☐ drifts ____ ft
-- Readout "phone X ft up" matches reality? ____ ft
+- Does the water edge line up with the debris-line height? ☐ yes ☐ off by ____ in
 
-## Test 4 — Waterline on buildings
+## A4. Record and walk into the street
 
-1. Point at houses across the street. Wait for **VPS: LOCALIZED** (it may say to move the phone
-   around).
+1. MENU → **Record session**.
+2. Walk slowly to where you stood in 2017, camera aimed at the ground a few feet ahead.
+3. Stop mid-street and sweep the pavement until the grid appears under you.
 
-**Expect:** **Buildings** goes above 0. The houses get blue tint below a **bright cyan line**
-at the water level, level with the top of the gauge's water mark.
+**Expect:** muddy khaki water, opaque looking down, grey and mirror-like toward the far end of
+the street. **Water at your feet ≥ ~20 in**. The 2017 video showed ~24 in *after* the peak;
+kneecap top is 23¼ in in sandals.
 
-- Seconds to LOCALIZED: ____  Buildings count: ____
-- Is the line level with the gauge? ☐ yes ☐ off by ____ ft
-- Is it on the right houses, or shifted sideways? ______________________
-- Trees or cars in front of houses: does the line show through them? ☐ (expected)
+- **Water at your feet, mid-street: ____ in**  (gutter: ____ in)
+- So porch above street crown = reading − 4 = ____ in
 
-## Test 5 — Compare scenarios
+## A5. Drift check
 
-Open the picker again and switch floods. You don't need to tap the ground again.
+Walk back to the porch and point at the porch floor.
 
-| Scenario | Expected depth | Looks right? |
-|---|---|---|
-| Memorial Day 2015 | 6.4 ft | ☐ |
-| Tax Day 2016 | 5.2 ft | ☐ |
-| 100-year | 7.7 ft | ☐ |
-| 500-year | 9.2 ft | ☐ |
+**Expect:** water at your feet returns to **~4 in**.
 
-## Test 6 — Clear Lake marker (teleport, works anywhere)
+- Reading back at the porch: ____ in  → drift = reading − 4 = ____ in
 
-1. Pick **Clear Lake: Clear Lake City Blvd…**, then **2010 marker's "25-ft surge"**. Tap the
-   ground.
+## A6. Reproduce the 2017 pan
 
-**Expect:** a 25 ft pole, blue at the bottom and green above it with a grey cap, next to a short
-gauge showing only **4.3 ft** of water.
+Back in mid-street, repeat the 2017 pan while **screen recording** (swipe down → Screen record).
+Then MENU → **Stop recording**.
 
-☐ OK  Notes: ______________________________________________
-
-## Test 7 — Home: reproduce the 2017 video (the key test)
-
-1. MENU → Flood site… → **Home** → **Harvey peak (debris line at the door)**.
-2. Stand on the porch and **tap the porch floor**. The water should sit 4 in above it, at the
-   debris line and just under the door sill.
-3. MENU → **Record session**. Walk to where you stood in 2017 (mid-street) and **repeat the pan**.
-
-**Expect:** muddy khaki water across the street, mirror-grey toward the horizon.
-**Water at your feet** should read about the depth from the video. Knee height (a) = ____ in.
-
-- Water at your feet in mid-street: ____ in (gutter: ____ in)
 - Does it look like the 2017 video? ______________________________
-- Knee height (a) vs. app reading: difference ____ in
+
+## A7. Optional — the 1:41 pm level and model comparison
+
+MENU → Flood site… → Home, then:
+
+| Scenario | Tap | Expect | OK? |
+|---|---|---|---|
+| Harvey, Aug 27 1:41 pm | street | water 2 ft 0 in above street, at your knees | ☐ |
+| Model estimate: Harvey | street | dry (0 in) — the model misses by >2 ft | ☐ |
+| 500-year flood | street | 3 ft 4 in | ☐ |
+
+## A8. Waterline on houses
+
+Point at houses across the street and wait for **VPS: LOCALIZED** (move the phone around).
+
+**Expect:** **Buildings** above 0. A brown stain on the houses below a **pale debris line**
+at the water level. Houses hide the water behind them.
+
+- Seconds to LOCALIZED: ____  Buildings: ____
+- Line level with the gauge? ☐ yes ☐ off by ____ in   Shifted sideways? ☐ no ☐ yes
+
+## A9. Clear Lake marker (teleport, works anywhere)
+
+Clear Lake: Clear Lake City Blvd… → **2010 marker's "25-ft surge"**. Tap the ground.
+
+**Expect:** a 25 ft pole (blue bottom, green above, grey cap) beside a gauge showing only
+**4 ft 4 in** of water.
+
+☐ OK   Screenshot ☐
+
+---
+
+# Part B — Meyerland: Braesheather Dr at Millbury Dr
+
+**Scale:** 7.8 ft is just above a 7 ft garage door and about a foot above a front door.
+
+1. MENU → Flood site… → **Meyerland: Braesheather Dr at Millbury Dr** → **Hurricane Harvey**.
+2. MENU → **Record session**. Tap the street in front of you.
+
+**Expect:** a gauge with about 8 one-foot stripes; the water surface is **over your head**,
+seen from below as a murky brown ceiling. On houses, a brown stain up to a pale line about a
+foot above the front doors (7 ft 10 in above the street).
+
+- Line on houses vs. front doors: ______________________
+- Seconds to LOCALIZED: ____  Buildings: ____
+
+3. Switch floods (no need to re-tap):
+
+| Scenario | Expected | OK? |
+|---|---|---|
+| Memorial Day 2015 | 6 ft 5 in | ☐ |
+| Tax Day 2016 | 5 ft 2 in | ☐ |
+| 100-year | 7 ft 8 in | ☐ |
+| 500-year | 9 ft 2 in | ☐ |
+
+4. Screen-record a slow pan across the houses, then MENU → **Stop recording**.
 
 ---
 
 ## Capture for the demo
 
-☐ **MENU → Record session** before Tests 3–4 at Braesheather, then **Stop recording** after
-(about 2.5 MB/s). The walk can then be replayed at home with MENU → Play back recording…
+☐ Session recording at home (A4–A6) and in Meyerland (Part B), about 2.5 MB/s
 
-☐ Screen recording (swipe down from the top, then **Screen record**) of Tests 3–4 at Braesheather
+☐ Screen recording of the home pan (A6) and the Meyerland pan (B4)
 
-☐ Screenshot: marker plus gauge (Test 6)
+☐ Screenshot: marker plus gauge (A9)
 
-☐ Photo of the scene *without* the phone, for a before/after comparison
+☐ Photo of each scene *without* the app, for before/after
 
 ## If something's wrong
 
 | Symptom | Try |
 |---|---|
-| No planes | More light; aim at textured ground (grass or asphalt, not glare); move slowly |
-| Buildings stays 0 | Wait for VPS: LOCALIZED; point at buildings and the skyline, not the ground |
-| No water visible | Check the readout for "dry here"; look up, since the surface is above your head |
-| Everything floats or drifts | Tap the ground again; restart the app |
+| No planes | More light; textured ground (asphalt, grass, doormat), not glare; move slowly |
+| Water at your feet shows "—" | No ground under you yet: sweep the pavement until the grid appears |
+| Water at your feet ≈ 4 in in the street | Street not detected yet; keep sweeping |
+| Buildings stays 0 | Wait for VPS: LOCALIZED; point at buildings and skyline, not the ground |
+| "Earth state error (…)" | Note the word in brackets; force-close and reopen the app |
+| No water visible | Check for "dry" in the readout; in Meyerland look up, since it's over your head |
+| Everything floats or drifts | Tap the reference surface again; restart the app |
 | App crashes | Note the exact step; reinstall happens at the desktop |
