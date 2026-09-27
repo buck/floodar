@@ -129,7 +129,7 @@ sets the level; the reflections, ripples and familiar surroundings make people b
 - USGS Harvey depth rasters (SIR 2018-5070) to replace the high-water-mark blend near
   residential streets.
 - Depth-API occlusion for nearby objects (cars, fences, furniture), following DepthLab.
-- Floating debris and an underwater view, both used effectively by Disaster Scope.
+- Floating debris (a key cue in Disaster Scope) and an underwater view when the phone is below the water level.
 
 ---
 
