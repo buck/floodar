@@ -74,6 +74,20 @@ gauge showing only **4.3 ft** of water.
 
 ☐ OK  Notes: ______________________________________________
 
+## Test 7 — Home: reproduce the 2017 video (the key test)
+
+1. MENU → Flood site… → **Home** → **Harvey peak (debris line at the door)**.
+2. Stand on the porch and **tap the porch floor**. The water should sit 4 in above it, at the
+   debris line and just under the door sill.
+3. MENU → **Record session**. Walk to where you stood in 2017 (mid-street) and **repeat the pan**.
+
+**Expect:** muddy khaki water across the street, mirror-grey toward the horizon.
+**Water at your feet** should read about the depth from the video. Knee height (a) = ____ in.
+
+- Water at your feet in mid-street: ____ in (gutter: ____ in)
+- Does it look like the 2017 video? ______________________________
+- Knee height (a) vs. app reading: difference ____ in
+
 ---
 
 ## Capture for the demo

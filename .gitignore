@@ -21,3 +21,6 @@ local.properties
 # Downloaded geospatial data (DEM tiles, etc.) — large binaries, fetched on demand.
 data/
 .env
+
+# Personal flood sites (home address) — never commit.
+app/src/main/assets/sites_local.json

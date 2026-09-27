@@ -19,6 +19,8 @@ import org.json.JSONObject;
  */
 public final class FloodSite {
   private static final String ASSET = "sites.json";
+  /** Optional personal sites (e.g. home), gitignored; same schema. */
+  private static final String LOCAL_ASSET = "sites_local.json";
   private static final double METERS_PER_FOOT = 0.3048;
 
   /** One water level at a site: an observed event, a modeled recurrence, or an interpretation. */
@@ -27,18 +29,22 @@ public final class FloodSite {
     public final String label;
     /** "observed", "modeled", or "interpretation". */
     public final String kind;
+    /** NaN when the level was observed relative to a surface rather than surveyed. */
     public final double wseFtNavd88;
     /** Water depth above ground at the site; negative means the site stayed dry. */
     public final double depthFt;
     public final String source;
+    /** Surface the depth is measured from: "ground" (default), "street", or "porch". */
+    public final String reference;
 
     Scenario(JSONObject o) throws JSONException {
       id = o.getString("id");
       label = o.getString("label");
       kind = o.getString("kind");
-      wseFtNavd88 = o.getDouble("wse_ft_navd88");
+      wseFtNavd88 = o.optDouble("wse_ft_navd88", Double.NaN);
       depthFt = o.getDouble("depth_ft");
       source = o.optString("source", "");
+      reference = o.optString("reference", "ground");
     }
 
     public double depthMeters() {
@@ -121,10 +127,24 @@ public final class FloodSite {
     return null;
   }
 
-  /** Loads all sites from assets. Throws on a missing or malformed file: it ships with the APK. */
+  /**
+   * Loads all sites from assets: sites.json (required; throws if missing or malformed) followed
+   * by sites_local.json if present.
+   */
   public static List<FloodSite> loadAll(Context context) throws IOException, JSONException {
+    List<FloodSite> sites = new ArrayList<>(load(context, ASSET));
+    try {
+      sites.addAll(load(context, LOCAL_ASSET));
+    } catch (java.io.FileNotFoundException e) {
+      // No personal sites in this build.
+    }
+    return Collections.unmodifiableList(sites);
+  }
+
+  private static List<FloodSite> load(Context context, String asset)
+      throws IOException, JSONException {
     String json;
-    try (InputStream in = context.getAssets().open(ASSET)) {
+    try (InputStream in = context.getAssets().open(asset)) {
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       byte[] buf = new byte[8192];
       for (int n; (n = in.read(buf)) != -1; ) {
@@ -137,6 +157,6 @@ public final class FloodSite {
     for (int i = 0; i < arr.length(); i++) {
       sites.add(new FloodSite(arr.getJSONObject(i)));
     }
-    return Collections.unmodifiableList(sites);
+    return sites;
   }
 }

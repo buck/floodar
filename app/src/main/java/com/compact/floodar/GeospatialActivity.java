@@ -954,11 +954,16 @@ public class GeospatialActivity extends AppCompatActivity
     float[] cameraPos = cameraPose.getTranslation();
     updateGround(frame, cameraPose);
 
+    // Depth is measured from the scenario's reference surface: the tapped point if set (porch,
+    // street...), otherwise the ground under the phone.
+    boolean anchored =
+        groundAnchor != null && groundAnchor.getTrackingState() == TrackingState.TRACKING;
+    float referenceY = anchored ? groundAnchor.getPose().ty() : groundY;
     float depth = (float) scenario.depthMeters();
-    float waterY = groundY + depth;
+    float waterY = referenceY + depth;
 
     // Opaque poles first, then translucent water on buildings/terrain, then the surface.
-    if (groundAnchor != null && groundAnchor.getTrackingState() == TrackingState.TRACKING) {
+    if (anchored) {
       Pose base = groundAnchor.getPose();
       if (site.marker != null) {
         floodRenderer.drawMarker(render, viewMatrix, projectionMatrix, base, site.marker);
@@ -970,19 +975,15 @@ public class GeospatialActivity extends AppCompatActivity
     if (!scenario.isDry()) {
       floodRenderer.drawSurface(render, viewMatrix, projectionMatrix, waterY, cameraPos);
     }
-    updateFloodHud(site, scenario, cameraPos[1] - groundY);
+    updateFloodHud(site, scenario, anchored, cameraPos[1] - groundY, waterY - groundY);
   }
 
   /**
-   * Keeps {@link #groundY} current. A tapped ground anchor wins; otherwise every few frames cast
-   * a ray straight down from the camera and take the first horizontal plane or Streetscape
-   * terrain hit, smoothed. With no hit yet, assume the phone is held at chest height.
+   * Keeps {@link #groundY} (the ground under the phone) current: every few frames cast a ray
+   * straight down from the camera and take the first horizontal plane or Streetscape terrain
+   * hit, smoothed. With no hit yet, assume the phone is held at chest height.
    */
   private void updateGround(Frame frame, Pose cameraPose) {
-    if (groundAnchor != null && groundAnchor.getTrackingState() == TrackingState.TRACKING) {
-      groundY = groundAnchor.getPose().ty();
-      return;
-    }
     if (groundY == null) {
       groundY = cameraPose.ty() - ASSUMED_PHONE_HEIGHT_M;
       groundSource = "assumed 1.4 m below phone";
@@ -1014,7 +1015,12 @@ public class GeospatialActivity extends AppCompatActivity
     }
   }
 
-  private void updateFloodHud(FloodSite site, FloodSite.Scenario scenario, float phoneHeightM) {
+  private void updateFloodHud(
+      FloodSite site,
+      FloodSite.Scenario scenario,
+      boolean anchored,
+      float phoneHeightM,
+      float feetDepthM) {
     long now = System.currentTimeMillis();
     if (now - lastFloodHudMillis < 250) {
       return;
@@ -1037,22 +1043,36 @@ public class GeospatialActivity extends AppCompatActivity
         buildings++;
       }
     }
+    String surface = scenario.reference; // "ground", "street", "porch"
     String depthText =
         scenario.isDry()
-            ? String.format(Locale.US, "dry here (water %.1f ft below ground)", -scenario.depthFt)
-            : String.format(Locale.US, "%.1f ft of water", scenario.depthFt);
-    String ground =
-        groundAnchor != null ? "tapped point" : groundSource + " — tap the ground to lock";
+            ? String.format(
+                Locale.US, "dry (water %.1f ft below %s)", -scenario.depthFt, surface)
+            : String.format(Locale.US, "%s above %s", formatFeetInches(scenario.depthFt), surface);
+    String reference =
+        anchored
+            ? "tapped " + surface
+            : groundSource + " — tap the " + surface + " to lock";
+    boolean feetDetected =
+        groundSource.equals("detected plane") || groundSource.equals("Google terrain mesh");
+    String feet =
+        !feetDetected
+            ? "— (no ground detected under you)"
+            : feetDepthM <= 0
+                ? String.format(Locale.US, "dry (%s below you)", formatFeetInches(-feetDepthM / 0.3048))
+                : formatFeetInches(feetDepthM / 0.3048);
     String text =
         String.format(
             Locale.US,
-            "%s%s — %s\n%s: %s\nGround: %s (phone %.1f ft up)\nPlanes: %d (%.0f m²)  Buildings: %d  VPS: %s",
+            "%s%s — %s\n%s: %s\nReference: %s\nWater at your feet: %s  (phone %.1f ft up)\n"
+                + "Planes: %d (%.0f m²)  Buildings: %d  VPS: %s",
             isRecording() ? "● REC  " : (playbackName != null ? "▶ REPLAY  " : ""),
             site.area,
             site.name,
             scenario.label,
             depthText,
-            ground,
+            reference,
+            feet,
             phoneHeightM / 0.3048f,
             planes,
             area,
@@ -1063,6 +1083,15 @@ public class GeospatialActivity extends AppCompatActivity
           floodInfoView.setVisibility(View.VISIBLE);
           floodInfoView.setText(text);
         });
+  }
+
+  /** 0.35 -> "4 in", 1.75 -> "1 ft 9 in", 7.8 -> "7 ft 10 in". */
+  private static String formatFeetInches(double feet) {
+    long inches = Math.round(feet * 12);
+    if (inches < 12) {
+      return inches + " in";
+    }
+    return (inches / 12) + " ft " + (inches % 12) + " in";
   }
 
   /**
@@ -1459,7 +1488,14 @@ public class GeospatialActivity extends AppCompatActivity
                   .apply();
               Toast.makeText(
                       this,
-                      site.name + "\n" + selectedScenario.label + ": " + describeDepth(selectedScenario),
+                      site.name
+                          + "\n"
+                          + selectedScenario.label
+                          + ": "
+                          + describeDepth(selectedScenario)
+                          + "\nTap the "
+                          + selectedScenario.reference
+                          + " to set the reference",
                       Toast.LENGTH_LONG)
                   .show();
             })
@@ -1469,9 +1505,9 @@ public class GeospatialActivity extends AppCompatActivity
 
   private static String describeDepth(FloodSite.Scenario sc) {
     if (sc.isDry()) {
-      return String.format(Locale.US, "dry (%.1f ft below ground)", -sc.depthFt);
+      return String.format(Locale.US, "dry (%.1f ft below %s)", -sc.depthFt, sc.reference);
     }
-    return String.format(Locale.US, "%.1f ft above ground", sc.depthFt);
+    return formatFeetInches(sc.depthFt) + " above " + sc.reference;
   }
 
   /** Menu button to choose anchor type. */
@@ -1809,7 +1845,8 @@ public class GeospatialActivity extends AppCompatActivity
     }
     runOnUiThread(
         () ->
-            Toast.makeText(this, "No ground found there — tap a detected plane", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                    this, "No flat surface found there — tap a detected plane", Toast.LENGTH_SHORT)
                 .show());
   }
 

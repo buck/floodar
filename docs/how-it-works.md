@@ -124,6 +124,37 @@ At the Harvey high-water mark nearest Braesheather (D-0027, Rice Blvd bridge), H
 **100-year** level (54.3 ft) is essentially the same as Harvey's observed peak (54.1 ft). The
 **500-year** level (55.7 ft) would put about 9–10 ft of water on the street.
 
+### 2.5 Ground truth from a resident: the model understates street depth
+
+One team member lived through Harvey in a house near Brays Bayou, about 800 m from the
+nearest HCFCD high-water mark (D-0022, Buffalo Speedway). They left three pieces of evidence:
+
+1. **Debris-line photo at the front door** (2017-09-03, a week after the peak). Brick courses
+   are a standard 2⅔ in, which makes the wall a ruler (~81 px/in in the photo). The debris line
+   sits **3.3 in below the top of the slab** and **4.2 in above the porch floor**. The resident
+   independently remembered the peak as "about 3 in below the top of the slab".
+2. **Street video** (2017-08-27, 1:41 pm CDT, somewhat after the peak). Standing mid-street,
+   the water is **just above the knees** (~20–22 in), with a small bow wave around the legs.
+   Water covers the street curb to curb and reaches the lawn edges. Kayaks pass farther down
+   the street.
+3. **The same method as the site list** gives a Harvey water surface of 47.85 ft NAVD88 at the
+   nearest mark and 47.8 ft of ground from the 10 m DEM, i.e. **about 0 ft of water**.
+
+**Conclusion:** at this house the model understates street depth by roughly **2 ft**. Likely
+causes:
+
+- The 10 m DEM averages the low, crowned street together with the higher yards and house pads.
+- The high-water mark is at the bayou, 800 m away. With the bayou full, rainfall in the
+  neighborhood couldn't drain, so local water may have stood higher than the bayou itself.
+
+This is why the app supports **observed** scenarios measured from a local reference surface
+(section 4.4). They don't depend on the DEM or the datum at all. The resident's site is kept
+in a gitignored `sites_local.json` so the home address never reaches the repository.
+
+The video also set the **look** of the rendered water (section 4.3). Flood water in a Houston
+street is opaque muddy khaki, not blue. Looking toward the horizon it's a mirror of the overcast
+sky, and the flow shows as long ripple streaks.
+
 ---
 
 ## 3. The Clear Lake marker and the datum question
@@ -170,36 +201,54 @@ actually supports.
 ### 4.2 Choosing a flood
 
 **MENU** button (bottom right, always visible) → **Flood site…** opens a two-step picker. First choose a site,
-grouped by area. Then choose a scenario; each one shows its depth ("7.8 ft above ground", or
-"dry"). The choice is saved and restored the next time the app starts.
+grouped by area. Then choose a scenario; each one shows its depth and the surface it's measured
+from ("7 ft 10 in above ground", "4 in above porch"), or "dry". The toast tells you which
+surface to tap. The choice is saved and restored the next time the app starts.
+
+Scenario kinds: **observed** (a high-water mark or a resident's observation), **modeled**
+(HCFCD 100/500-year levels), and **interpretation** (the 2010 marker's "25 ft" read as an
+elevation).
 
 ### 4.3 What gets drawn
 
 With a site and scenario selected:
 
+- **Water surface.** A sheet at the water level, centered on the phone, extending ~80 m and
+  fading out from 15 m to 80 m. Its look is modeled on the Harvey street video:
+  - **opaque muddy khaki** when you look down (88% opaque; you can't see the pavement)
+  - it becomes a **mirror of the grey sky** toward the horizon (a Fresnel term)
+  - **long flow streaks** and finer chop move across it
+  - seen **from below** (water over your head), it's a darker, murky ceiling
+  It's hidden if the spot stayed dry.
 - **Flood line on buildings.** Google's Streetscape building and terrain meshes are colored by
-  height relative to the water: translucent blue below the water level, a **bright cyan
-  waterline** at it, and nothing above. The line's width grows with distance so it stays a few
-  pixels thick far away. Because this uses Google's 3D city model, it works on buildings at any
-  distance, well beyond where the phone can detect planes.
-- **Water surface.** A translucent, faintly rippling blue sheet at ground + depth, centered on
-  the phone. It extends ~80 m and fades out from 15 m to 80 m. It's hidden if the spot stayed
-  dry.
+  height relative to the water: a **muddy stain** below the water level and a **pale debris
+  line** at it. Above the water they're invisible but still hide the water surface behind them,
+  so houses correctly block the water beyond them. The line's width grows with distance so it
+  stays a few pixels thick far away. Because this uses Google's 3D city model, it works on
+  buildings at any distance, well beyond where the phone can detect planes.
 - **Depth gauge.** Where you tap the ground, a pole with alternating red and white **1-foot
   stripes** rises to 1 ft above the water level.
 - **Marker reconstruction** (Clear Lake sites only). At the tapped point, a 25 ft
   blue/green/grey pole next to the gauge.
 
-### 4.4 Finding the ground level
+### 4.4 Reference surface and "water at your feet"
 
-Water height = ground level + scenario depth. The app sets the ground level as follows:
+Water height = reference surface + scenario depth. Each scenario names its reference: `ground`
+(the default for DEM-based sites), `street`, or `porch` (for observations like "the debris line
+was 4.2 in above the porch floor").
 
-1. **Tapped point.** Tap a detected plane, or Google's terrain mesh, to lock the ground there.
-   An ARCore anchor keeps that point fixed as tracking refines. Tapping again moves it.
-2. Otherwise, **every 10 frames the app looks straight down from the phone**. It takes the first
-   upward-facing detected plane, or else Google's terrain mesh, and smooths the result
-   (80% old value, 20% new).
-3. Otherwise it **assumes the phone is 1.4 m above the ground** until something is detected.
+1. **Tapped reference.** Tap the named surface: a detected plane, or Google's terrain mesh. An
+   ARCore anchor keeps that point fixed as tracking refines. Tapping again moves it.
+2. Without a tap, the reference is the **ground under the phone**. Every 10 frames the app casts
+   a ray straight down from the phone and takes the first upward-facing detected plane, or else
+   Google's terrain mesh, smoothed (80% old value, 20% new). If nothing is detected, it
+   **assumes the phone is 1.4 m above the ground**.
+
+The downward probe runs all the time, so the readout also shows **water at your feet**: water
+level minus the ground detected under the phone. Tap the porch at the debris-line height, walk
+into the street, and the app reports the street depth itself. At the resident's house that
+should come out near the knee-deep water in the 2017 video, a direct check of ARCore's height
+accuracy against a known flood.
 
 **Why plane detection alone isn't enough:** in earlier tests, ARCore plane detection outdoors
 only covered about 20 m around the phone. It didn't reach the buildings, up lawns or down
@@ -213,8 +262,10 @@ The original sample drew no 3D content until VPS localization finished. floodar 
 
 - **Planes, the water surface and the gauge** need only normal ARCore camera tracking. They
   appear right away, even where VPS fails.
-- **The building flood line** needs Streetscape Geometry, and Google only provides that after
-  VPS localization. That requires Street View coverage, which most Houston streets have.
+- **The building flood line** needs Streetscape Geometry, which comes from the Geospatial
+  service. In testing, meshes arrived while VPS was still localizing, but they only line up
+  with the real buildings once VPS reports LOCALIZED. That requires Street View coverage,
+  which most Houston streets have.
 
 ### 4.6 On-screen readout
 
@@ -222,10 +273,13 @@ A blue panel at the top of the screen updates four times a second:
 
 ```
 Meyerland — Braesheather Dr at Millbury Dr
-Hurricane Harvey (Aug 2017): 7.8 ft of water
-Ground: detected plane — tap the ground to lock (phone 4.6 ft up)
+Hurricane Harvey (Aug 2017): 7 ft 10 in above ground
+Reference: tapped ground
+Water at your feet: 7 ft 9 in  (phone 4.6 ft up)
 Planes: 3 (42 m²)  Buildings: 17  VPS: LOCALIZED
 ```
+
+`● REC` or `▶ REPLAY` is prefixed while recording or playing back (section 4.7).
 
 The **Planes** line reports how many upward-facing planes are tracked and their total area.
 This is the measurement for the project's original question: how well ARCore detects and keeps
@@ -321,6 +375,7 @@ docker compose up -d            # floodar-db on 127.0.0.1:5443
 | `app/src/main/java/com/compact/floodar/FloodSite.java` | Model and loader for `sites.json` |
 | `app/src/main/assets/shaders/flood*.{vert,frag}` | Flood shaders (mesh coloring by height, water surface, solid color) |
 | `app/src/main/assets/sites.json` | Generated site list |
+| `app/src/main/assets/sites_local.json` | Personal sites (resident's home); **gitignored**, loaded if present |
 | `db/load_floodar_db.sh`, `db/sites.sql`, `db/export_sites.sh` | Data pipeline |
 | `docker-compose.yml` | `floodar-db` container |
 | `fema_storm_surge_markers_report.md` | History of the Clear Lake marker |

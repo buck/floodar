@@ -22,8 +22,8 @@ import java.util.Map;
  * Draws a flood scenario in AR world space, given the water surface height (world Y):
  *
  * <ul>
- *   <li>Streetscape building/terrain meshes tinted below the water and lined at the waterline.
- *   <li>A translucent water surface around the camera, fading with distance.
+ *   <li>Streetscape building/terrain meshes stained below the water and lined at the waterline.
+ *   <li>A muddy, sky-reflecting water surface around the camera, fading with distance.
  *   <li>A depth gauge (1-ft stripes) or the reconstructed Clear Lake marker at a ground point.
  * </ul>
  */
@@ -31,9 +31,11 @@ final class FloodRenderer {
   private static final float FOOT = 0.3048f;
   private static final float SURFACE_HALF_SIZE = 80f;
 
-  private static final float[] WATER_COLOR = {0.10f, 0.35f, 0.75f, 0.40f};
-  private static final float[] WATER_SURFACE_COLOR = {0.15f, 0.45f, 0.85f, 0.45f};
-  private static final float[] LINE_COLOR = {0.55f, 0.95f, 1.0f, 0.95f};
+  // Colors sampled from the resident's Harvey street video (2017-08-27).
+  private static final float[] WATER_COLOR = {0.40f, 0.33f, 0.20f, 0.55f}; // stain on walls
+  private static final float[] WATER_SURFACE_COLOR = {0.47f, 0.39f, 0.25f, 0.88f}; // mud
+  private static final float[] SKY_COLOR = {0.78f, 0.79f, 0.80f}; // overcast reflection
+  private static final float[] LINE_COLOR = {0.88f, 0.84f, 0.70f, 0.95f}; // debris line
   private static final float[] STRIPE_A = {0.95f, 0.95f, 0.95f, 1f};
   private static final float[] STRIPE_B = {0.85f, 0.15f, 0.15f, 1f};
   private static final float[] MARKER_CAP = {0.75f, 0.75f, 0.75f, 1f};
@@ -63,6 +65,7 @@ final class FloodRenderer {
             .setDepthWrite(false)
             .setCullFace(false)
             .setVec4("u_WaterColor", WATER_SURFACE_COLOR)
+            .setVec3("u_SkyColor", SKY_COLOR)
             .setFloat("u_FadeStart", 15f)
             .setFloat("u_FadeEnd", SURFACE_HALF_SIZE);
     solidShader =
