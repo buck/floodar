@@ -1551,6 +1551,7 @@ public class GeospatialActivity extends AppCompatActivity
     }
     new AlertDialog.Builder(this)
         .setTitle(site.name)
+        .setNeutralButton("Directions", (dialog, which) -> openDirections(site))
         .setSingleChoiceItems(
             labels,
             checked,
@@ -1578,6 +1579,22 @@ public class GeospatialActivity extends AppCompatActivity
             })
         .setNegativeButton(android.R.string.cancel, null)
         .show();
+  }
+
+  /** Opens Google Maps (or any map app / browser) with driving directions to the site. */
+  private void openDirections(FloodSite site) {
+    Uri uri =
+        Uri.parse(
+            String.format(
+                Locale.US,
+                "https://www.google.com/maps/dir/?api=1&destination=%.6f,%.6f&travelmode=driving",
+                site.lat,
+                site.lon));
+    try {
+      startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, uri));
+    } catch (android.content.ActivityNotFoundException e) {
+      Toast.makeText(this, "No map app found", Toast.LENGTH_SHORT).show();
+    }
   }
 
   private static String describeDepth(FloodSite.Scenario sc) {
