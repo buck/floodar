@@ -59,6 +59,8 @@ final class FloodRenderer {
   private final Mesh boxMesh;
   private final Shader labelShader;
   private final Mesh labelMesh;
+  private final Shader overlayShader;
+  private final Mesh overlayMesh;
 
   // Gauge labels "1 ft".."MAX_LABEL_FT ft", one per row of a texture atlas.
   private static final int MAX_LABEL_FT = 15;
@@ -102,6 +104,20 @@ final class FloodRenderer {
             .setTexture("u_Texture", createLabelAtlas(render));
     // Quad x in 0..1, y in -1..0 (top edge at the anchor height), with UVs.
     labelMesh = texturedQuad(render);
+    overlayShader =
+        Shader.createFromAssets(
+                render, "shaders/flood_overlay.vert", "shaders/flood_overlay.frag", null)
+            .setBlend(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
+            .setDepthTest(false)
+            .setDepthWrite(false)
+            .setCullFace(false)
+            .setVec3("u_DeepColor", new float[] {0.20f, 0.16f, 0.10f})
+            .setVec3("u_ShallowColor", new float[] {0.42f, 0.36f, 0.24f});
+    overlayMesh =
+        mesh(
+            render,
+            new float[] {-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0},
+            new int[] {0, 1, 2, 0, 2, 3});
 
     // Unit quad in XZ (-1..1), scaled/translated per frame.
     surfaceMesh =
@@ -157,6 +173,16 @@ final class FloodRenderer {
           .setVec3("u_CameraPos", cameraPos);
       render.draw(e.getValue(), meshShader);
     }
+  }
+
+  /**
+   * Underwater tint over the whole view, for when the camera is below the water surface.
+   * Stronger the deeper the camera is (saturates about 1 m below the surface).
+   */
+  void drawUnderwater(SampleRender render, float depthBelowSurfaceMeters) {
+    float strength = 0.35f + 0.25f * Math.min(1f, depthBelowSurfaceMeters);
+    overlayShader.setFloat("u_Strength", strength);
+    render.draw(overlayMesh, overlayShader);
   }
 
   /**

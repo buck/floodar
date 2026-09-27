@@ -972,6 +972,11 @@ public class GeospatialActivity extends AppCompatActivity
     float depth = (float) scenario.depthMeters();
     float waterY = referenceY + depth;
 
+    // Underwater: tint the whole camera view first, so the gauge, debris lines and labels drawn
+    // afterward stay crisp on top of it.
+    if (!scenario.isDry() && cameraPos[1] < waterY) {
+      floodRenderer.drawUnderwater(render, waterY - cameraPos[1]);
+    }
     // Opaque poles first, then translucent water on buildings/terrain, then the surface.
     if (anchored) {
       Pose base = groundAnchor.getPose();

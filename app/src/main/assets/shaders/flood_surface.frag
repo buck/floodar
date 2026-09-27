@@ -40,9 +40,12 @@ void main() {
   vec3 mud = u_WaterColor.rgb * (0.88 + 0.16 * ripple);
 
   if (u_CameraPos.y < v_WorldPos.y) {
-    // Seen from below (water over your head): murky ceiling.
-    float a = 0.6 * (1.0 - smoothstep(u_FadeStart, u_FadeEnd, length(toFrag.xz)));
-    o_FragColor = vec4(mud * 0.6, a);
+    // Seen from below (water over your head): a bright, rippling ceiling where daylight comes
+    // through the murky surface, so the surface reads clearly as "up there".
+    float glow = 0.55 + 0.25 * ripple;
+    vec3 ceiling = mix(mud, u_SkyColor, glow);
+    float a = 0.8 * (1.0 - smoothstep(u_FadeStart, u_FadeEnd, length(toFrag.xz)));
+    o_FragColor = vec4(ceiling, a);
     return;
   }
 
