@@ -250,8 +250,15 @@ was 4.0 in above the porch floor").
 1. **Tapped reference.** Tap the named surface: a detected plane, or Google's terrain mesh. An
    ARCore anchor keeps that point fixed as tracking refines. Tapping again moves it.
 2. Without a tap, the reference is the **ground under the phone**. Every 10 frames the app casts
-   a ray straight down from the phone and takes the first upward-facing detected plane, or else
-   Google's terrain mesh, smoothed (80% old value, 20% new). If nothing is detected, it
+   a ray straight down from the phone. It takes a detected upward-facing plane if the ray hits
+   one, and falls back to Google's terrain mesh only if it doesn't. The result is smoothed
+   (80% old value, 20% new), and smoothing restarts whenever the source changes.
+
+**Planes always beat the terrain mesh**, for taps and for the probe. Field test at the
+resident's house: the terrain mesh is a smoothed surface without curbs, steps or street crown,
+and it can sit inches above the pavement. When the probe accepted whichever surface came first,
+porch-to-street read 4 in against a real ≥ 20 in. The readout now names the source of both the
+reference and the ground under you ("detected plane" or "terrain mesh"). If nothing is detected, it
    **assumes the phone is 1.4 m above the ground**.
 
 The downward probe runs all the time, so the readout also shows **water at your feet**: water

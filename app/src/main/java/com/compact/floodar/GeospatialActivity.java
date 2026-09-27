@@ -215,6 +215,7 @@ public class GeospatialActivity extends AppCompatActivity
   private Anchor groundAnchor;
   private Float groundY;
   private String groundSource = "searching";
+  private String referenceSource = "";
   private int groundProbeFrame;
   private long lastFloodHudMillis;
   private static final float ASSUMED_PHONE_HEIGHT_M = 1.4f;
@@ -1000,25 +1001,13 @@ public class GeospatialActivity extends AppCompatActivity
     }
     float[] origin = cameraPose.getTranslation();
     float[] down = {0f, -1f, 0f};
-    for (HitResult hit : frame.hitTest(origin, 0, down, 0)) {
-      Trackable t = hit.getTrackable();
-      String source = null;
-      if (t instanceof Plane
-          && ((Plane) t).getType() == Plane.Type.HORIZONTAL_UPWARD_FACING
-          && ((Plane) t).isPoseInPolygon(hit.getHitPose())) {
-        source = "detected plane";
-      } else if (t instanceof StreetscapeGeometry
-          && ((StreetscapeGeometry) t).getType() == StreetscapeGeometry.Type.TERRAIN) {
-        source = "Google terrain mesh";
-      }
-      if (source != null) {
-        float y = hit.getHitPose().ty();
-        boolean fresh = !groundSource.equals("detected plane")
-            && !groundSource.equals("Google terrain mesh");
-        groundY = fresh ? y : 0.8f * groundY + 0.2f * y;
-        groundSource = source;
-        return;
-      }
+    HitResult hit = pickGroundHit(frame.hitTest(origin, 0, down, 0));
+    if (hit != null) {
+      String source = isUpwardPlaneHit(hit) ? SOURCE_PLANE : SOURCE_TERRAIN;
+      float y = hit.getHitPose().ty();
+      // Restart smoothing when the source changes so plane and mesh heights never blend.
+      groundY = source.equals(groundSource) ? 0.8f * groundY + 0.2f * y : y;
+      groundSource = source;
     }
   }
 
@@ -1059,10 +1048,10 @@ public class GeospatialActivity extends AppCompatActivity
             : String.format(Locale.US, "%s above %s", formatFeetInches(scenario.depthFt), surface);
     String reference =
         anchored
-            ? "tapped " + surface
+            ? "tapped " + surface + " (" + referenceSource + ")"
             : groundSource + " — tap the " + surface + " to lock";
     boolean feetDetected =
-        groundSource.equals("detected plane") || groundSource.equals("Google terrain mesh");
+        groundSource.equals(SOURCE_PLANE) || groundSource.equals(SOURCE_TERRAIN);
     String feet =
         !feetDetected
             ? "— (no ground detected under you)"
@@ -1085,7 +1074,7 @@ public class GeospatialActivity extends AppCompatActivity
     String text =
         String.format(
             Locale.US,
-            "%s%s — %s\n%s: %s\nReference: %s%s\nWater at your feet: %s  (phone %.1f ft up)\n"
+            "%s%s — %s\n%s: %s\nReference: %s%s\nWater at your feet (%s): %s  (phone %.1f ft up)\n"
                 + "Planes: %d (%.0f m²)  Buildings: %d  VPS: %s",
             isRecording() ? "● REC  " : (playbackName != null ? "▶ REPLAY  " : ""),
             site.area,
@@ -1094,6 +1083,7 @@ public class GeospatialActivity extends AppCompatActivity
             depthText,
             reference,
             tapped,
+            feetDetected ? groundSource : "none",
             feet,
             phoneHeightM / 0.3048f,
             planes,
@@ -1855,23 +1845,51 @@ public class GeospatialActivity extends AppCompatActivity
     }
   }
 
-  /** Moves the ground point (and gauge/marker) to the first ground-like surface under a tap. */
-  private void setGroundFromTap(Frame frame, MotionEvent tap) {
-    for (HitResult hit : frame.hitTest(tap)) {
-      Trackable t = hit.getTrackable();
-      boolean ground =
-          (t instanceof Plane
-                  && ((Plane) t).getType() == Plane.Type.HORIZONTAL_UPWARD_FACING
-                  && ((Plane) t).isPoseInPolygon(hit.getHitPose()))
-              || (t instanceof StreetscapeGeometry
-                  && ((StreetscapeGeometry) t).getType() == StreetscapeGeometry.Type.TERRAIN);
-      if (ground) {
-        if (groundAnchor != null) {
-          groundAnchor.detach();
-        }
-        groundAnchor = hit.createAnchor();
-        return;
+  private static final String SOURCE_PLANE = "detected plane";
+  private static final String SOURCE_TERRAIN = "terrain mesh";
+
+  private static boolean isUpwardPlaneHit(HitResult hit) {
+    Trackable t = hit.getTrackable();
+    return t instanceof Plane
+        && ((Plane) t).getType() == Plane.Type.HORIZONTAL_UPWARD_FACING
+        && ((Plane) t).isPoseInPolygon(hit.getHitPose());
+  }
+
+  private static boolean isTerrainHit(HitResult hit) {
+    Trackable t = hit.getTrackable();
+    return t instanceof StreetscapeGeometry
+        && ((StreetscapeGeometry) t).getType() == StreetscapeGeometry.Type.TERRAIN;
+  }
+
+  /**
+   * Picks the ground-like hit: the nearest detected upward plane if any, otherwise the nearest
+   * Streetscape terrain hit. The terrain mesh is a smoothed model without curbs, steps or street
+   * crown, and can sit inches above the real surface, so it must never win over a real plane.
+   */
+  private static HitResult pickGroundHit(List<HitResult> hits) {
+    for (HitResult hit : hits) {
+      if (isUpwardPlaneHit(hit)) {
+        return hit;
       }
+    }
+    for (HitResult hit : hits) {
+      if (isTerrainHit(hit)) {
+        return hit;
+      }
+    }
+    return null;
+  }
+
+  /** Moves the reference point (and gauge/marker) to the ground-like surface under a tap. */
+  private void setGroundFromTap(Frame frame, MotionEvent tap) {
+    HitResult hit = pickGroundHit(frame.hitTest(tap));
+    if (hit != null) {
+      if (groundAnchor != null) {
+        groundAnchor.detach();
+      }
+      groundAnchor = hit.createAnchor();
+      referenceSource = isUpwardPlaneHit(hit) ? SOURCE_PLANE : SOURCE_TERRAIN;
+      return;
     }
     runOnUiThread(
         () ->
