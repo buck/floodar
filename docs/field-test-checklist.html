@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>floodar Field Test</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="/dev/null" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">floodar Field Test</h1>
+</header>
+<h1 id="floodar-field-test-checklist">floodar Field Test Checklist</h1>
+<p><strong>Where:</strong> home street first (teleport test), then
+<strong>Braesheather Dr at Millbury Dr</strong>, Meyerland (29.67764,
+−95.46445). Go in daylight. Bring a charged phone.</p>
+<p><strong>Scale check:</strong> 7.8 ft is just above the top of a
+typical 7 ft garage door, and about a foot above a front door (6 ft 8
+in).</p>
+<hr />
+<h2 id="test-1-launch-and-pick-a-flood">Test 1 — Launch and pick a
+flood</h2>
+<ol type="1">
+<li>Open floodar and allow camera and location.</li>
+<li>Tap the gear, then <strong>Flood site…</strong>, then
+<strong>Meyerland: Braesheather Dr at Millbury Dr</strong>, then
+<strong>Hurricane Harvey</strong>.</li>
+</ol>
+<p><strong>Expect:</strong> a toast reading “…7.8 ft above ground”, and
+a blue panel at the top of the screen.</p>
+<p>☐ OK Notes: ______________________________________________</p>
+<h2 id="test-2-ground-detection-the-original-v1-question">Test 2 —
+Ground detection (the original v1 question)</h2>
+<ol type="1">
+<li>Point the phone at the street or lawn, 1–3 m ahead. Sweep slowly
+side to side.</li>
+</ol>
+<p><strong>Expect:</strong> a white grid on the ground; the
+<strong>Planes</strong> count goes up; “Ground: detected plane”.</p>
+<ul>
+<li>Seconds until the first plane: ____</li>
+<li>Largest area (m²): ____</li>
+<li>Distance where the grid stops (m): ____</li>
+<li>Did it hold while you walked 20 m? ☐ yes ☐ no</li>
+</ul>
+<h2 id="test-3-water-surface-and-gauge">Test 3 — Water surface and
+gauge</h2>
+<ol type="1">
+<li><strong>Tap the street</strong> in front of you.</li>
+</ol>
+<p><strong>Expect:</strong> a red/white striped pole at the tap, with
+1-ft stripes (count ~8). A translucent blue sheet above head height,
+since the phone is about 4.5 ft up and the water 7.8 ft. The readout
+says “Ground: tapped point”.</p>
+<ul>
+<li>Does the pole stay put when you walk around it? ☐ yes ☐ drifts ____
+ft</li>
+<li>Readout “phone X ft up” matches reality? ____ ft</li>
+</ul>
+<h2 id="test-4-waterline-on-buildings">Test 4 — Waterline on
+buildings</h2>
+<ol type="1">
+<li>Point at houses across the street. Wait for <strong>VPS:
+LOCALIZED</strong> (it may say to move the phone around).</li>
+</ol>
+<p><strong>Expect:</strong> <strong>Buildings</strong> goes above 0. The
+houses get blue tint below a <strong>bright cyan line</strong> at the
+water level, level with the top of the gauge’s water mark.</p>
+<ul>
+<li>Seconds to LOCALIZED: ____ Buildings count: ____</li>
+<li>Is the line level with the gauge? ☐ yes ☐ off by ____ ft</li>
+<li>Is it on the right houses, or shifted sideways?
+______________________</li>
+<li>Trees or cars in front of houses: does the line show through them? ☐
+(expected)</li>
+</ul>
+<h2 id="test-5-compare-scenarios">Test 5 — Compare scenarios</h2>
+<p>Open the picker again and switch floods. You don’t need to tap the
+ground again.</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Expected depth</th>
+<th>Looks right?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memorial Day 2015</td>
+<td>6.4 ft</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Tax Day 2016</td>
+<td>5.2 ft</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>100-year</td>
+<td>7.7 ft</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>500-year</td>
+<td>9.2 ft</td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
+<h2 id="test-6-clear-lake-marker-teleport-works-anywhere">Test 6 — Clear
+Lake marker (teleport, works anywhere)</h2>
+<ol type="1">
+<li>Pick <strong>Clear Lake: Clear Lake City Blvd…</strong>, then
+<strong>2010 marker’s “25-ft surge”</strong>. Tap the ground.</li>
+</ol>
+<p><strong>Expect:</strong> a 25 ft pole, blue at the bottom and green
+above it with a grey cap, next to a short gauge showing only <strong>4.3
+ft</strong> of water.</p>
+<p>☐ OK Notes: ______________________________________________</p>
+<hr />
+<h2 id="capture-for-the-demo">Capture for the demo</h2>
+<p>☐ Screen recording (swipe down from the top, then <strong>Screen
+record</strong>) of Tests 3–4 at Braesheather</p>
+<p>☐ Screenshot: marker plus gauge (Test 6)</p>
+<p>☐ Photo of the scene <em>without</em> the phone, for a before/after
+comparison</p>
+<h2 id="if-somethings-wrong">If something’s wrong</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Try</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No planes</td>
+<td>More light; aim at textured ground (grass or asphalt, not glare);
+move slowly</td>
+</tr>
+<tr>
+<td>Buildings stays 0</td>
+<td>Wait for VPS: LOCALIZED; point at buildings and the skyline, not the
+ground</td>
+</tr>
+<tr>
+<td>No water visible</td>
+<td>Check the readout for “dry here”; look up, since the surface is
+above your head</td>
+</tr>
+<tr>
+<td>Everything floats or drifts</td>
+<td>Tap the ground again; restart the app</td>
+</tr>
+<tr>
+<td>App crashes</td>
+<td>Note the exact step; reinstall happens at the desktop</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
