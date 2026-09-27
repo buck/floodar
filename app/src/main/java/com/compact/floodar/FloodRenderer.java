@@ -30,8 +30,9 @@ import java.util.Map;
  * Draws a flood scenario in AR world space, given the water surface height (world Y):
  *
  * <ul>
- *   <li>Streetscape building/terrain meshes stained below the water and lined at the waterline.
- *   <li>A muddy, sky-reflecting water surface around the camera, fading with distance.
+ *   <li>Streetscape buildings stained below the water and lined at the waterline; terrain only
+ *       hides water behind raised ground.
+ *   <li>A muddy water surface around the camera that reflects the live camera image.
  *   <li>A depth gauge (1-ft stripes) or the reconstructed Clear Lake marker at a ground point.
  * </ul>
  */
@@ -40,9 +41,9 @@ final class FloodRenderer {
   private static final float SURFACE_HALF_SIZE = 80f;
 
   // Colors sampled from the resident's Harvey street video (2017-08-27).
-  private static final float[] WATER_COLOR = {0.40f, 0.33f, 0.20f, 0.55f}; // stain on walls
-  private static final float[] WATER_SURFACE_COLOR = {0.47f, 0.39f, 0.25f, 0.88f}; // mud
-  private static final float[] SKY_COLOR = {0.78f, 0.79f, 0.80f}; // overcast reflection
+  private static final float[] WATER_COLOR = {0.36f, 0.29f, 0.18f, 0.55f}; // stain on walls
+  private static final float[] WATER_SURFACE_COLOR = {0.36f, 0.30f, 0.19f, 0.90f}; // mud
+  private static final float[] SKY_COLOR = {0.75f, 0.77f, 0.79f}; // overcast reflection
   private static final float[] LINE_COLOR = {0.88f, 0.84f, 0.70f, 0.95f}; // debris line
   private static final float[] STRIPE_A = {0.95f, 0.95f, 0.95f, 1f};
   private static final float[] STRIPE_B = {0.85f, 0.15f, 0.15f, 1f};
@@ -69,8 +70,12 @@ final class FloodRenderer {
   private final float[] model = new float[16];
   private final float[] modelView = new float[16];
   private final float[] mvp = new float[16];
+  private final float[] viewProjection = new float[16];
 
-  FloodRenderer(SampleRender render) throws IOException {
+  /**
+   * @param cameraTexture the ARCore camera image (external OES texture) the water reflects.
+   */
+  FloodRenderer(SampleRender render, Texture cameraTexture) throws IOException {
     meshShader =
         Shader.createFromAssets(render, "shaders/flood.vert", "shaders/flood_mesh.frag", null)
             .setBlend(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA)
@@ -83,6 +88,7 @@ final class FloodRenderer {
             .setCullFace(false)
             .setVec4("u_WaterColor", WATER_SURFACE_COLOR)
             .setVec3("u_SkyColor", SKY_COLOR)
+            .setTexture("u_CameraColorTexture", cameraTexture)
             .setFloat("u_FadeStart", 15f)
             .setFloat("u_FadeEnd", SURFACE_HALF_SIZE);
     solidShader =
@@ -143,19 +149,37 @@ final class FloodRenderer {
       }
       g.getMeshPose().toMatrix(model, 0);
       setMatrices(meshShader, view, projection);
-      meshShader.setFloat("u_WaterY", waterY).setVec3("u_CameraPos", cameraPos);
+      meshShader
+          .setFloat("u_WaterY", waterY)
+          .setFloat(
+              "u_IsTerrain", g.getType() == StreetscapeGeometry.Type.TERRAIN ? 1f : 0f)
+          .setVec3("u_CameraPos", cameraPos);
       render.draw(e.getValue(), meshShader);
     }
   }
 
-  /** Draws the translucent water surface centered under/over the camera. */
+  /**
+   * Draws the water surface centered under/over the camera.
+   *
+   * @param uvTransform screen NDC to camera-texture UV as {originU, originV, dxU, dxV, dyU, dyV}
+   */
   void drawSurface(
-      SampleRender render, float[] view, float[] projection, float waterY, float[] cameraPos) {
+      SampleRender render,
+      float[] view,
+      float[] projection,
+      float waterY,
+      float[] cameraPos,
+      float[] uvTransform) {
     Matrix.setIdentityM(model, 0);
     Matrix.translateM(model, 0, cameraPos[0], waterY, cameraPos[2]);
     Matrix.scaleM(model, 0, SURFACE_HALF_SIZE, 1f, SURFACE_HALF_SIZE);
     setMatrices(surfaceShader, view, projection);
+    Matrix.multiplyMM(viewProjection, 0, projection, 0, view, 0);
     surfaceShader
+        .setMat4("u_ViewProjection", viewProjection)
+        .setVec2("u_UvOrigin", new float[] {uvTransform[0], uvTransform[1]})
+        .setVec2("u_UvDx", new float[] {uvTransform[2], uvTransform[3]})
+        .setVec2("u_UvDy", new float[] {uvTransform[4], uvTransform[5]})
         .setVec3("u_CameraPos", cameraPos)
         .setFloat("u_Time", (SystemClock.uptimeMillis() % 100000) / 1000f);
     render.draw(surfaceMesh, surfaceShader);

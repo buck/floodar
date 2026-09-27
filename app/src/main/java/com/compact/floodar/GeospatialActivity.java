@@ -47,6 +47,7 @@ import com.google.ar.core.Anchor.TerrainAnchorState;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.Camera;
 import com.google.ar.core.Config;
+import com.google.ar.core.Coordinates2d;
 import com.google.ar.core.Earth;
 import com.google.ar.core.Frame;
 import com.google.ar.core.GeospatialPose;
@@ -220,6 +221,9 @@ public class GeospatialActivity extends AppCompatActivity
   private long lastFloodHudMillis;
   private static final float ASSUMED_PHONE_HEIGHT_M = 1.4f;
   private Earth.EarthState lastEarthErrorState;
+  // NDC (-1,-1), (1,-1), (-1,1) and their camera-texture UVs, for water reflections.
+  private static final float[] NDC_CORNERS = {-1f, -1f, 1f, -1f, -1f, 1f};
+  private final float[] cornerUvs = new float[6];
 
   // ARCore session recording/playback (camera + sensors as MP4, replayable through the app).
   private File currentRecording;
@@ -601,8 +605,8 @@ public class GeospatialActivity extends AppCompatActivity
     // an IOException.
     try {
       planeRenderer = new PlaneRenderer(render);
-      floodRenderer = new FloodRenderer(render);
       backgroundRenderer = new BackgroundRenderer(render);
+      floodRenderer = new FloodRenderer(render, backgroundRenderer.getCameraColorTexture());
       virtualSceneFramebuffer = new Framebuffer(render, /* width= */ 1, /* height= */ 1);
 
       // Virtual object to render (ARCore geospatial)
@@ -980,7 +984,19 @@ public class GeospatialActivity extends AppCompatActivity
     floodRenderer.drawStreetscape(
         render, streetscapeGeometryToMeshes, viewMatrix, projectionMatrix, waterY, cameraPos);
     if (!scenario.isDry()) {
-      floodRenderer.drawSurface(render, viewMatrix, projectionMatrix, waterY, cameraPos);
+      // Map screen NDC corners to camera-texture UVs so the water can reflect the camera image.
+      frame.transformCoordinates2d(
+          Coordinates2d.OPENGL_NORMALIZED_DEVICE_COORDINATES,
+          NDC_CORNERS,
+          Coordinates2d.TEXTURE_NORMALIZED,
+          cornerUvs);
+      float[] uvTransform = {
+        cornerUvs[0], cornerUvs[1],
+        cornerUvs[2] - cornerUvs[0], cornerUvs[3] - cornerUvs[1],
+        cornerUvs[4] - cornerUvs[0], cornerUvs[5] - cornerUvs[1]
+      };
+      floodRenderer.drawSurface(
+          render, viewMatrix, projectionMatrix, waterY, cameraPos, uvTransform);
     }
     updateFloodHud(
         site, scenario, anchored, cameraPos[1] - groundY, waterY - groundY, referenceY - groundY);
@@ -1861,17 +1877,16 @@ public class GeospatialActivity extends AppCompatActivity
         && ((StreetscapeGeometry) t).getType() == StreetscapeGeometry.Type.TERRAIN;
   }
 
-  /**
-   * Picks the ground-like hit: the nearest detected upward plane if any, otherwise the nearest
-   * Streetscape terrain hit. The terrain mesh is a smoothed model without curbs, steps or street
-   * crown, and can sit inches above the real surface, so it must never win over a real plane.
-   */
-  private static HitResult pickGroundHit(List<HitResult> hits) {
+  private static HitResult firstPlaneHit(List<HitResult> hits) {
     for (HitResult hit : hits) {
       if (isUpwardPlaneHit(hit)) {
         return hit;
       }
     }
+    return null;
+  }
+
+  private static HitResult firstTerrainHit(List<HitResult> hits) {
     for (HitResult hit : hits) {
       if (isTerrainHit(hit)) {
         return hit;
@@ -1880,9 +1895,38 @@ public class GeospatialActivity extends AppCompatActivity
     return null;
   }
 
-  /** Moves the reference point (and gauge/marker) to the ground-like surface under a tap. */
+  /**
+   * Picks the ground-like hit: the nearest detected upward plane if any, otherwise the nearest
+   * Streetscape terrain hit. The terrain mesh is a smoothed model without curbs, steps or street
+   * crown, and can sit inches above the real surface, so it must never win over a real plane.
+   */
+  private static HitResult pickGroundHit(List<HitResult> hits) {
+    HitResult plane = firstPlaneHit(hits);
+    return plane != null ? plane : firstTerrainHit(hits);
+  }
+
+  /**
+   * Moves the reference point (and gauge/marker) to the surface under a tap. Preference: a
+   * detected plane at the tap; else the detected plane under the phone; only then the terrain
+   * mesh at the tap. Field test: before VPS localizes, the terrain mesh can sit ~3 ft off and
+   * then jump when localization lands, dragging the water with it.
+   */
   private void setGroundFromTap(Frame frame, MotionEvent tap) {
-    HitResult hit = pickGroundHit(frame.hitTest(tap));
+    HitResult hit = firstPlaneHit(frame.hitTest(tap));
+    if (hit == null) {
+      float[] origin = frame.getCamera().getPose().getTranslation();
+      hit = firstPlaneHit(frame.hitTest(origin, 0, new float[] {0f, -1f, 0f}, 0));
+      if (hit != null) {
+        runOnUiThread(
+            () ->
+                Toast.makeText(
+                        this, "Using the detected ground under you", Toast.LENGTH_SHORT)
+                    .show());
+      }
+    }
+    if (hit == null) {
+      hit = firstTerrainHit(frame.hitTest(tap));
+    }
     if (hit != null) {
       if (groundAnchor != null) {
         groundAnchor.detach();

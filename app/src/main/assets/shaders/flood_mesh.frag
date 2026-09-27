@@ -1,9 +1,12 @@
 #version 300 es
-// Colors Streetscape building/terrain meshes by height relative to the water surface: muddy
-// stain below, pale debris line at the waterline. Above the water the fragment is fully
-// transparent but still writes depth, so buildings hide the water surface behind them.
+// Colors Streetscape meshes by height relative to the water surface.
+// Buildings: muddy stain below, pale debris line at the waterline (fading out with distance).
+// Terrain: never drawn in color (the water surface covers it); above the water it still writes
+// depth so raised ground hides the water behind it.
+// Above the water, fragments are transparent but write depth, so buildings hide the water.
 precision highp float;
 uniform float u_WaterY;
+uniform float u_IsTerrain;
 uniform vec3 u_CameraPos;
 uniform vec4 u_WaterColor;
 uniform vec4 u_LineColor;
@@ -12,10 +15,17 @@ out vec4 o_FragColor;
 
 void main() {
   float d = v_WorldPos.y - u_WaterY;
-  // Keep the line a few pixels thick at any distance.
-  float halfWidth = max(0.03, 0.003 * distance(v_WorldPos, u_CameraPos));
+  if (u_IsTerrain > 0.5) {
+    if (d < 0.0) {
+      discard;
+    }
+    o_FragColor = vec4(0.0);
+    return;
+  }
+  float dist = distance(v_WorldPos, u_CameraPos);
+  float halfWidth = max(0.025, 0.0015 * dist);
   if (abs(d) < halfWidth) {
-    o_FragColor = u_LineColor;
+    o_FragColor = vec4(u_LineColor.rgb, u_LineColor.a * (1.0 - smoothstep(40.0, 90.0, dist)));
   } else if (d < 0.0) {
     o_FragColor = u_WaterColor;
   } else {

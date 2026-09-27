@@ -225,14 +225,19 @@ With a site and scenario selected:
 
 - **Water surface.** A sheet at the water level, centered on the phone, extending ~80 m and
   fading out from 15 m to 80 m. Its look is modeled on the Harvey street video:
-  - **opaque muddy khaki** when you look down (88% opaque; you can't see the pavement)
-  - it becomes a **mirror of the grey sky** toward the horizon (a Fresnel term)
-  - **long flow streaks** and finer chop move across it
+  - **opaque dark mud** when you look down (90% opaque; you can't see the pavement)
+  - **reflections of the real scene:** the shader mirrors each view ray off the water and
+    samples the **live camera image** where it lands, about 25 m away (a planar-mirror
+    approximation that's right for the far side of the street). Trees, houses and sky appear
+    upside-down in the water, dimmed and browned, and more strongly toward the horizon
+    (a Fresnel term). Off-screen reflections fall back to overcast grey.
+  - **long flow streaks** and finer chop move across it and ripple the reflections
   - seen **from below** (water over your head), it's a darker, murky ceiling
   It's hidden if the spot stayed dry.
-- **Flood line on buildings.** Google's Streetscape building and terrain meshes are colored by
-  height relative to the water: a **muddy stain** below the water level and a **pale debris
-  line** at it. Above the water they're invisible but still hide the water surface behind them,
+- **Flood line on buildings.** Google's Streetscape building meshes are colored by height
+  relative to the water: a **muddy stain** below the water level and a **pale debris line** at
+  it, fading out beyond ~40–90 m. Terrain meshes are never colored; where the ground rises above
+  the water, they only hide the water behind it. Above the water they're invisible but still hide the water surface behind them,
   so houses correctly block the water beyond them. The line's width grows with distance so it
   stays a few pixels thick far away. Because this uses Google's 3D city model, it works on
   buildings at any distance, well beyond where the phone can detect planes.
