@@ -838,16 +838,18 @@ public class GeospatialActivity extends AppCompatActivity
     // Get camera matrix and draw.
     camera.getViewMatrix(viewMatrix, 0);
 
-    // Visualize tracked points.
+    // Visualize tracked points, except while a flood is shown (they clutter demo video).
     // Use try-with-resources to automatically release the point cloud.
-    try (PointCloud pointCloud = frame.acquirePointCloud()) {
-      if (pointCloud.getTimestamp() > lastPointCloudTimestamp) {
-        pointCloudVertexBuffer.set(pointCloud.getPoints());
-        lastPointCloudTimestamp = pointCloud.getTimestamp();
+    if (selectedScenario == null) {
+      try (PointCloud pointCloud = frame.acquirePointCloud()) {
+        if (pointCloud.getTimestamp() > lastPointCloudTimestamp) {
+          pointCloudVertexBuffer.set(pointCloud.getPoints());
+          lastPointCloudTimestamp = pointCloud.getTimestamp();
+        }
+        Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+        pointCloudShader.setMat4("u_ModelViewProjection", modelViewProjectionMatrix);
+        render.draw(pointCloudMesh, pointCloudShader);
       }
-      Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
-      pointCloudShader.setMat4("u_ModelViewProjection", modelViewProjectionMatrix);
-      render.draw(pointCloudMesh, pointCloudShader);
     }
 
     // Visualize planes.

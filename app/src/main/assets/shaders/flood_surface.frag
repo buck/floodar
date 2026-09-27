@@ -3,7 +3,7 @@
 // Flood water surface, modeled on the resident's Harvey street video: opaque muddy water that
 // mirrors the trees, houses and sky. The reflection samples the live camera image where the
 // mirrored view ray lands ~25 m away (a planar-mirror approximation that is right for the far
-// side of the street), perturbed by flow ripples. Falls back to overcast sky off-screen.
+// side of the street), perturbed by flow ripples. Off-screen lookups clamp to the edge.
 precision highp float;
 uniform samplerExternalOES u_CameraColorTexture;
 uniform mat4 u_ViewProjection;
@@ -51,13 +51,15 @@ void main() {
   if (r.y > 0.0) {
     vec4 clip = u_ViewProjection * vec4(v_WorldPos + r * REFLECT_DISTANCE, 1.0);
     if (clip.w > 0.0) {
+      // Clamp to the screen instead of fading to sky: off-screen reflections reuse the nearest
+      // visible camera pixels (avoids pale bands at the screen edges). Only far above the top
+      // edge does it blend to overcast sky.
       vec2 ndc = clip.xy / clip.w;
-      float edge = max(abs(ndc.x), abs(ndc.y));
-      if (edge < 1.0) {
-        vec2 uv = u_UvOrigin + u_UvDx * (ndc.x * 0.5 + 0.5) + u_UvDy * (ndc.y * 0.5 + 0.5);
-        vec3 cam = texture(u_CameraColorTexture, uv).rgb;
-        refl = mix(cam, u_SkyColor, smoothstep(0.85, 1.0, edge));
-      }
+      float above = ndc.y - 1.0;
+      ndc = clamp(ndc, vec2(-0.995), vec2(0.995));
+      vec2 uv = u_UvOrigin + u_UvDx * (ndc.x * 0.5 + 0.5) + u_UvDy * (ndc.y * 0.5 + 0.5);
+      vec3 cam = texture(u_CameraColorTexture, uv).rgb;
+      refl = mix(cam, u_SkyColor, smoothstep(0.0, 0.6, above));
     }
   }
   // Muddy water dims and browns its reflections.
