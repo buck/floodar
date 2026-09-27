@@ -129,19 +129,23 @@ At the Harvey high-water mark nearest Braesheather (D-0027, Rice Blvd bridge), H
 One team member lived through Harvey in a house near Brays Bayou, about 800 m from the
 nearest HCFCD high-water mark (D-0022, Buffalo Speedway). They left three pieces of evidence:
 
-1. **Debris-line photo at the front door** (2017-09-03, a week after the peak). Brick courses
-   are a standard 2⅔ in, which makes the wall a ruler (~81 px/in in the photo). The debris line
-   sits **3.3 in below the top of the slab** and **4.2 in above the porch floor**. The resident
-   independently remembered the peak as "about 3 in below the top of the slab".
+1. **Debris-line photo at the front door** (2017-09-03, a week after the peak). The faux-brick
+   siding courses measure 7⅝ in per 3 courses (2.54 in each), which makes the wall a ruler at
+   ~85 px/in in the photo. The debris line sits **4.0 in above the porch floor** and **3.1 in
+   below the door threshold**. The concrete slab is 1¾ in below the threshold (¾ in wood floor
+   plus ~1 in to the threshold strip), so the peak came within **about 1.4 in of the slab**.
 2. **Street video** (2017-08-27, 1:41 pm CDT, somewhat after the peak). Standing mid-street,
-   the water is **just above the knees** (~20–22 in), with a small bow wave around the legs.
-   Water covers the street curb to curb and reaches the lawn edges. Kayaks pass farther down
-   the street.
+   the water is **just above the top of the kneecap**: 23¼ in off the pavement in the sandals
+   worn that day (24 in measured in running shoes), so **about 24 in ± 1 in**. A small bow
+   wave forms around the legs. Water covers the street curb to curb and reaches the lawn edges.
+   Kayaks pass farther down the street.
 3. **The same method as the site list** gives a Harvey water surface of 47.85 ft NAVD88 at the
    nearest mark and 47.8 ft of ground from the 10 m DEM, i.e. **about 0 ft of water**.
 
-**Conclusion:** at this house the model understates street depth by roughly **2 ft**. Likely
-causes:
+**Conclusion:** at this house the model understates street depth by **more than 2 ft**, since
+the video was taken after the peak. The two observations together also bound the house's
+elevation: the porch sits at least ~20 in above the street crown (24 in − 4 in, plus however
+much the water fell between the peak and the video). Likely causes of the model error:
 
 - The 10 m DEM averages the low, crowned street together with the higher yards and house pads.
 - The high-water mark is at the bayou, 800 m away. With the bayou full, rainfall in the
@@ -235,7 +239,7 @@ With a site and scenario selected:
 
 Water height = reference surface + scenario depth. Each scenario names its reference: `ground`
 (the default for DEM-based sites), `street`, or `porch` (for observations like "the debris line
-was 4.2 in above the porch floor").
+was 4.0 in above the porch floor").
 
 1. **Tapped reference.** Tap the named surface: a detected plane, or Google's terrain mesh. An
    ARCore anchor keeps that point fixed as tracking refines. Tapping again moves it.
