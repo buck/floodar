@@ -447,6 +447,13 @@ screen-record its playback later with the final rendering.
 - **Clear Lake has no surge scenario yet.** Only rainfall floods and the literal
   "25 ft NAVD88" reading are available.
 
+- **Indoors, walls don't stop the water.** The water surface extends about 80 m, and nothing
+  tells it where the room's walls are. Its far part projects near eye level, so on every wall
+  the water appears to reach just below eye height, whatever the chosen depth. (In a field
+  test at 8 in, the water looked about 5 ft deep, so that footage is labeled as a 5 ft
+  visualization.) Outdoors, Google's building geometry hides the water behind houses once VPS
+  localizes. The fix is ARCore Depth API occlusion (the Pixel 6a supports it); Google's
+  DepthLab sample already includes the needed shader.
 - **Height between distant surfaces is unreliable.** At the resident's house, ARCore measured
   the porch as 0–1 in above the walkway (the real step is 1–2 in) and about 4 in above
   mid-street. That held with both surfaces confirmed as detected planes. The 2017 evidence
