@@ -1031,6 +1031,11 @@ public class GeospatialActivity extends AppCompatActivity
     float[] origin = cameraPose.getTranslation();
     float[] down = {0f, -1f, 0f};
     HitResult hit = pickGroundHit(frame.hitTest(origin, 0, down, 0));
+    if (hit != null && isTerrainHit(hit) && state != State.LOCALIZED) {
+      // The terrain mesh is only aligned once VPS localizes (indoors, never): before that it
+      // was measured 11 ft below a living-room floor. Keep the assumed height instead.
+      hit = null;
+    }
     long now = System.currentTimeMillis();
     if (hit != null && isTerrainHit(hit) && lastPlaneGroundMillis > 0) {
       // Once any plane has been seen, hold the last plane height rather than jump to the
