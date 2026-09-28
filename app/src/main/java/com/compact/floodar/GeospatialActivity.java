@@ -848,12 +848,14 @@ public class GeospatialActivity extends AppCompatActivity
       }
     }
 
-    // Visualize planes.
-    planeRenderer.drawPlanes(
-        render,
-        session.getAllTrackables(Plane.class),
-        camera.getDisplayOrientedPose(),
-        projectionMatrix);
+    // Visualize planes, until a flood is showing over a detected floor (then the grid is clutter).
+    if (selectedScenario == null || lastPlaneGroundMillis == 0) {
+      planeRenderer.drawPlanes(
+          render,
+          session.getAllTrackables(Plane.class),
+          camera.getDisplayOrientedPose(),
+          projectionMatrix);
+    }
 
     drawFlood(frame, camera);
 
