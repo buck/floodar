@@ -273,6 +273,18 @@ history. Two problems:
 1. **Hurricane category is a poor predictor of surge height.** In 2009 the National Hurricane
    Center removed storm-surge ranges from the Saffir-Simpson scale. Surge depends on storm
    size, track, forward speed and landfall location, not only on wind speed.
+
+   NOAA's own example makes the point:
+
+   > *"Hurricane Ike (with hurricane force winds extending as much as 125 mi from the center) in 2008
+   > made landfall in Texas as a Category 2 hurricane and had peak storm surge values of about 20 ft.
+   > In contrast, tiny Hurricane Charley (with hurricane force winds extending at most 25 mi from the
+   > center) struck Florida in 2004 as a Category 4 hurricane and produced a peak storm surge of only
+   > about 7 ft."* (NOAA National Hurricane Center, [Saffir-Simpson Hurricane Wind Scale](https://www.nhc.noaa.gov/pdf/sshws.pdf))
+
+   The marker implied "Category 4: water here; Category 5: water way up here", exactly the
+   category-to-surge link NOAA had just dropped. The storm behind the whole program was Ike: a
+   Category 2 with a 20 ft surge.
 2. **"25 feet" was never tied to a vertical reference.** It could mean surge above normal tide,
    a water-surface elevation in a datum, or depth above local ground. At these sites the
    difference is huge:

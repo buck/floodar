@@ -29,6 +29,7 @@ Key claims used in the floodar write-up were checked in the source text (**Claim
 | [45] | Storm Surge Maximum of the Maximum (MOM)  | https://www.nhc.noaa.gov/surge/momDescrip.php | ✅ |
 | [46] | Potential Storm Surge Flooding Map  | https://www.nhc.noaa.gov/surge/inundation/ | ✅ |
 | [2018] | Baker brief: **Claim checked:** "a sign in the Clear Lake area indicating how high surge waters would rise…" | https://www.bakerinstitute.org/research/houston-plan-flood-damage-reduction | ✅ |
+| — | NOAA NHC. The Saffir-Simpson Hurricane Wind Scale (PDF). **Claim checked:** Ike, Category 2, peak surge about 20 ft; Charley, Category 4, about 7 ft. *Added during verification (from the GPT chat).* | https://www.nhc.noaa.gov/pdf/sshws.pdf | ✅ |
 | — | ABC13/KTRK (2011-02-09). Clear Lake removes storm surge warning signs. **Claim checked:** signs "funded by FEMA" | https://abc13.com/archive/7946821/ | ✅ |
 | — | Blackburn, J. Photograph of the Clear Lake marker (Baker Institute 2023, Fig. 3) | https://www.bakerinstitute.org/sites/default/files/2023-08/Blackburn-6years-Harvey-080423-Fig03.png | ✅ |
 

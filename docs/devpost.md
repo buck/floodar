@@ -66,9 +66,12 @@ leave early.
 After Hurricane Ike, FEMA and the State of Texas put up tall storm-surge markers in Clear Lake,
 blue and green poles showing "Category 4" and "Category 5" water levels. Residents and
 real-estate interests objected, and the City of Houston removed them in early 2011. The markers
-also had a scientific problem. Hurricane category is a poor predictor of surge height, and the
-"25-foot surge" they depicted was never tied to a vertical reference. At the marker sites the
-ground is 21–23 ft above sea level, so a 25 ft water level would be only 2–4 ft deep there.
+also had a scientific problem. Hurricane category is a poor predictor of surge height. In NOAA's
+own comparison, Hurricane Ike, the storm that prompted the markers, was only a **Category 2**
+but drove a **20 ft** surge, while the small **Category 4** Hurricane Charley produced **about
+7 ft**. The markers' "25-foot surge" was also never tied to a vertical reference. At the marker
+sites the ground is 21–23 ft above sea level, so a 25 ft water level would be only 2–4 ft deep
+there.
 
 Making risk visible at human scale is the right idea. Doing it with permanent, one-size-fits-all
 signs was a poor fit, both politically and scientifically.
