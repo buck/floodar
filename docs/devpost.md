@@ -27,10 +27,11 @@ my slab. Two blocks east, where the ground sits a couple of feet lower, neighbor
 inside their homes. I filmed it because I thought I would never see that scene again in my
 lifetime. I hope I was right.
 
-In late 2018 I heard Jim Blackburn of Rice University give a short talk. He described storm-surge
-markers that FEMA and the State of Texas had put up in Clear Lake after Hurricane Ike, tall poles
-showing how high the water could reach. They were taken down within months. The truth about
-flood risk, as he put it, was too uncomfortable to leave standing by the road.
+In late 2018 I heard a short talk by Jim Blackburn of Rice University about storm-surge markers
+that FEMA and the State of Texas had put up in Clear Lake after Hurricane Ike, tall poles
+showing how high the water could reach. They were taken down within months. The message I took
+away was that the truth about flood risk had been too uncomfortable to leave standing by the
+road.
 
 My reaction was simple: if the physical markers could be removed, it should be possible to put
 them back up, virtually, for anyone who wants to see. That idea has been on my list since 2018.
