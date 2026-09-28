@@ -986,8 +986,12 @@ public class GeospatialActivity extends AppCompatActivity
       }
       floodRenderer.drawGauge(render, viewMatrix, projectionMatrix, base, depth);
     }
-    floodRenderer.drawStreetscape(
-        render, streetscapeGeometryToMeshes, viewMatrix, projectionMatrix, waterY, cameraPos);
+    // Google's building/terrain meshes only line up with reality once VPS has localized; before
+    // that (and always indoors) their waterlines float through the scene.
+    if (state == State.LOCALIZED) {
+      floodRenderer.drawStreetscape(
+          render, streetscapeGeometryToMeshes, viewMatrix, projectionMatrix, waterY, cameraPos);
+    }
     if (!scenario.isDry()) {
       // Map screen NDC corners to camera-texture UVs so the water can reflect the camera image.
       frame.transformCoordinates2d(
@@ -1028,9 +1032,10 @@ public class GeospatialActivity extends AppCompatActivity
     float[] down = {0f, -1f, 0f};
     HitResult hit = pickGroundHit(frame.hitTest(origin, 0, down, 0));
     long now = System.currentTimeMillis();
-    if (hit != null && isTerrainHit(hit) && now - lastPlaneGroundMillis < PLANE_HOLD_MILLIS) {
-      // Walking off the edge of detected planes: hold the last plane height rather than jump to
-      // the terrain mesh, which can sit ~3 ft off (field test: "5 ft 1 in" instead of 2 ft).
+    if (hit != null && isTerrainHit(hit) && lastPlaneGroundMillis > 0) {
+      // Once any plane has been seen, hold the last plane height rather than jump to the
+      // terrain mesh, which can sit ~3 ft off outdoors (field test: "5 ft 1 in" instead of 2 ft)
+      // and anywhere at all indoors (field test: water jumped to ~5 ft in a house).
       if (!groundSource.equals(SOURCE_LAST_PLANE)) {
         groundSource = SOURCE_LAST_PLANE;
       }
@@ -1992,7 +1997,6 @@ public class GeospatialActivity extends AppCompatActivity
   private static final String SOURCE_PLANE = "detected plane";
   private static final String SOURCE_TERRAIN = "terrain mesh";
   private static final String SOURCE_LAST_PLANE = "last plane";
-  private static final long PLANE_HOLD_MILLIS = 15000;
   private long lastPlaneGroundMillis;
 
   private static boolean isUpwardPlaneHit(HitResult hit) {
