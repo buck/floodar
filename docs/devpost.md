@@ -137,6 +137,16 @@ spread it across the neighborhood.
 - **Tracking:** app usage by site and scenario, and, in a pilot, short before-and-after surveys:
   perceived risk, remembered depth, and preparedness or insurance intentions.
 
+### Who would fund it
+
+- **Cities and counties.** FEMA's Community Rating System gives residents flood-insurance
+  discounts when their community runs flood-risk outreach. A tool like Flood AR could support
+  that outreach ✏️ *(verify how CRS credits outreach projects)*.
+- **Flood-control and emergency-management outreach**, public libraries, schools and museums,
+  as a hands-on exhibit.
+- **Buyers, renters and homeowners** deciding where to live, whether to insure, and whether to
+  elevate.
+
 ### Impact
 
 - **Who it serves:** Harris County's roughly 4.8 million residents, especially the hundreds of
@@ -156,6 +166,12 @@ spread it across the neighborhood.
 ✏️ **A. Lester Buck III**: Houston resident who lived through Allison and Harvey in a
 Brays Bayou–area neighborhood. Researched the Clear Lake FEMA markers, built the data pipeline
 and field-tested the app. Developed with Claude Code (Anthropic) as an AI pair programmer.
+
+**With help from:** a friend who filmed the Meyerland field test over my shoulder; a friend
+whose home took 8 in of water and let me test the indoor view there; friends who lived on
+Braesheather Dr, whose story is in this project; and Jim Blackburn (Rice University), whose 2018
+talk started it. The next stage is to bring in HCFCD outreach staff, a research partner, and
+residents who can share their own flood evidence.
 
 ### The ask
 
@@ -212,7 +228,8 @@ put it: *"Hydrology determines where the water is; the shader determines whether
 ## "Try it out" links
 
 - ✏️ GitHub repository: https://github.com/buck/floodar. **Currently private: make it public
-  (or add the judges) before submitting.**
+  before submitting.** Open source under Apache 2.0.
+- ✏️ APK download: the GitHub Release (free; any ARCore-supported Android phone)
 - ✏️ Demo video (YouTube, unlisted is fine)
 - Write-up: `docs/how-it-works.md` (link from the public repo)
 
