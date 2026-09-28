@@ -18,6 +18,35 @@
 
 ## Project story ("About the project")
 
+### Inspiration
+
+On August 27, 2017, during Hurricane Harvey, I waded into the middle of my street near Brays
+Bayou and filmed a slow pan of the flood. The water was just above my knees and pushing past my
+legs; kayaks were going by down the block. The peak had come within about an inch and a half of
+my slab. Two blocks east, where the ground sits a couple of feet lower, neighbors had water
+inside their homes. I filmed it because I thought I would never see that scene again in my
+lifetime. I hope I was right.
+
+In late 2018 I heard Jim Blackburn of Rice University give a short talk. He described storm-surge
+markers that FEMA and the State of Texas had put up in Clear Lake after Hurricane Ike, tall poles
+showing how high the water could reach. They were taken down within months. The truth about
+flood risk, as he put it, was too uncomfortable to leave standing by the road.
+
+My reaction was simple: if the physical markers could be removed, it should be possible to put
+them back up, virtually, for anyone who wants to see. That idea has been on my list since 2018.
+Phone AR has finally caught up with it.
+
+Researching the markers for this hackathon taught me something I hadn't known. Their
+"Category 4" and "Category 5" labels were themselves misleading, because a hurricane's wind
+category is a poor predictor of how high the water rises. So floodar doesn't just put the marker
+back. It shows the water levels that were actually measured, in Harvey and in the floods before
+and since, and it shows them where people live.
+
+Houston's weather is changing, and its storms are getting wetter and more intense: three floods
+described as 500-year events in three years, from 2015 through 2017. When the water goes down and
+the drywall is replaced, it is easy to forget what it looked like. floodar is meant to help us
+remember, and to let people who never saw it understand.
+
 ### The problem: flood depth is a number nobody can picture
 
 Houston floods again and again. In Allison (2001), the Memorial Day flood (2015), the Tax Day

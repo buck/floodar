@@ -9,6 +9,14 @@ ground. It can also bring back a virtual copy of the Category 4/5 storm-surge ma
 FEMA and the State of Texas put up in Clear Lake in 2010. The City of Houston removed that
 marker in early 2011.
 
+**Origin.** The author filmed his flooded street during Harvey on Aug 27, 2017, standing in
+knee-deep water. In late 2018 he heard Jim Blackburn (Rice University) describe how the Clear
+Lake surge markers had been taken down because the truth they showed was unwelcome, and thought:
+if the markers can be taken down, we should be able to put them back up, in AR. This project is
+that idea, with one correction learned along the way: the markers' Category 4/5 labels were
+misleading, so floodar shows measured water levels instead (§3). The 2017 video later became the
+ground truth for validating the app (§2.5).
+
 ---
 
 ## 1. The core idea: depth above ground
