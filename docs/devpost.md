@@ -1,4 +1,6 @@
-# floodar: Devpost submission draft
+# Flood AR: Devpost submission draft
+
+> **For the "About the project" field, paste [`devpost-about.md`](devpost-about.md)**, which uses Devpost's seven sections. This file keeps the longer draft, the name/tagline and the other fields.
 
 *Paste each section into the matching Devpost field. Edit anything marked ✏️.*
 
@@ -6,13 +8,13 @@
 
 ## Project name
 
-**floodar**
+**Flood AR**
 
 ## Elevator pitch (tagline, 200 characters max)
 
-> See Houston's real floods where you stand. floodar uses your phone's camera to fill your street, or your living room, with muddy water at the depth Harvey actually reached.
+> See Houston's real floods where you stand. Flood AR (augmented reality) fills your street, or your living room, with muddy water at the depth Harvey actually reached.
 
-*(172 characters)*
+*(167 characters)*
 
 ---
 
