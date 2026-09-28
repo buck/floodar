@@ -230,7 +230,7 @@ put it: *"Hydrology determines where the water is; the shader determines whether
 - ✏️ GitHub repository: https://github.com/buck/floodar. **Currently private: make it public
   before submitting.** Open source under Apache 2.0.
 - ✏️ APK download: the GitHub Release (free; any ARCore-supported Android phone)
-- ✏️ Demo video (YouTube, unlisted is fine)
+- Demo video: https://youtu.be/eTixT4tzWrQ
 - Write-up: `docs/how-it-works.md` (link from the public repo)
 
 ## Image gallery (suggested order)

@@ -6,7 +6,7 @@ of your street, or your living room, at the depth it actually reached.
 
 *Houston Hackathon 2026.*
 
-- 🎬 **Demo video (3 min):** ✏️ *YouTube link*
+- 🎬 **Demo video (3 min):** https://youtu.be/eTixT4tzWrQ
 - 📱 **Try it:** ✏️ *APK download (GitHub Release)*. Needs an ARCore-supported Android phone.
 - 📄 **How it works (full write-up):** [docs/how-it-works.md](docs/how-it-works.md)
 
