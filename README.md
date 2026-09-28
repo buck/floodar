@@ -7,7 +7,7 @@ of your street, or your living room, at the depth it actually reached.
 *Houston Hackathon 2026.*
 
 - 🎬 **Demo video (3 min):** https://youtu.be/eTixT4tzWrQ
-- 📱 **Try it:** [APK download](https://github.com/buck/floodar/releases/tag/v0.1-hackathon). Needs an ARCore-supported Android phone.
+- 📱 **Try it:** [APK download](https://github.com/buck/floodar/releases/tag/v0.1-hackathon): works on most Android phones from the last few years (the ones Google supports for AR; [check the list](https://developers.google.com/ar/devices)).
 - 📄 **How it works (full write-up):** [docs/how-it-works.md](docs/how-it-works.md)
 
 ![Harvey 2017 (real video) vs. Flood AR 2026, same street](docs/images/street-2017-vs-2026.jpg)
@@ -29,7 +29,8 @@ of your street, or your living room, at the depth it actually reached.
 
 ## Install (APK)
 
-1. Download the APK from the release on this repository's Releases page.
+1. Download the APK from the release on this repository's Releases page. It runs on most Android
+   phones from the last few years ([Google's supported-device list](https://developers.google.com/ar/devices)).
 2. On the phone, open it and allow "install unknown apps" when asked.
 3. Open Flood AR, tap **MENU → Flood site…**, pick a site and flood, and tap the ground.
 
