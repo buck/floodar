@@ -7,7 +7,7 @@ of your street, or your living room, at the depth it actually reached.
 *Houston Hackathon 2026.*
 
 - 🎬 **Demo video (3 min):** https://youtu.be/eTixT4tzWrQ
-- 📱 **Try it:** ✏️ *APK download (GitHub Release)*. Needs an ARCore-supported Android phone.
+- 📱 **Try it:** [APK download](https://github.com/buck/floodar/releases/tag/v0.1-hackathon). Needs an ARCore-supported Android phone.
 - 📄 **How it works (full write-up):** [docs/how-it-works.md](docs/how-it-works.md)
 
 ![Harvey 2017 (real video) vs. Flood AR 2026, same street](docs/images/street-2017-vs-2026.jpg)
